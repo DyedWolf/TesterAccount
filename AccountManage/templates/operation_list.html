@@ -1,0 +1,214 @@
+{% extends 'layout.html' %}
+
+{% block css %}
+
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        <div style="margin: 10px;">
+            <label> UID：</label>
+            <a id="account_uid">{{ account_data.account_uid }}</a>
+            <label> YY：</label>
+            <a id="account_YY">{{ account_data.account_YY }}</a>
+            <label> 通行证：</label>
+            <a id="account_card">{{ account_data.account_card }}</a>
+        </div>
+
+                <!--充值-->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">账号充值</h3>
+            </div>
+            <div class="panel-body">
+                <form method="post" novalidate="">
+
+                    <div class="form-group">
+                        <label>充值的UID : </label>
+                        <a type="text" class="form-control">{{ account_data.account_uid }}</a>
+                    </div>
+                    <div class="form-group">
+                        <label>充值额度 : </label>
+                        <input type="text" class="form-control" value="" placeholder="充值额度" required="" id="quota">
+                    </div>
+
+                    <div class="form-group">
+                        <label>充值的币种 : </label>
+                        <select name="coin" class="form-control" required="" id="coin">
+                            <option value="1">Y币</option>
+                            <option value="2">紫水晶</option>
+                            <option value="34">金钻</option>
+                            <option value="36">红贝</option>
+                            <option value="58">ya币</option>
+                        </select>
+                    </div>
+
+                    <button type="button" id="btnAddBalance" class="btn btn-primary">确认</button>
+                    <button type="button" id="btnSearchBalance" class="btn btn-primary">查询</button>
+                    <label id="labelBalance" class="hide">
+                        当前货币数：<a id="balance"></a>
+
+                    </label>
+                </form>
+            </div>
+        </div>
+
+
+        <!--设置新用户-->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">设置新账号</h3>
+            </div>
+            <div class="panel-body">
+                <form method="post" novalidate="">
+
+                    <div class="form-group">
+                        <label>设置新账号的UID : </label>
+                        <a type="text" class="form-control">{{ account_data.account_uid }}</a>
+                    </div>
+                    <div class="form-group">
+                        <label>测试机的HDID : </label>
+                        <input type="text" class="form-control" value="" placeholder="测试机的HDID" required="" id="hdid">
+                    </div>
+
+                    <div class="form-group">
+                        <label>新账号登录的APP : </label>
+                        <select name="app" class="form-control" required="" id="app">
+                            <option value="yomi" selected="">Yo语音</option>
+                            <option value="zhuiwan">追玩</option>
+                        </select>
+                    </div>
+
+                    <button type="button" id="btnNewAccount" class="btn btn-primary">确认</button>
+                </form>
+            </div>
+        </div>
+
+
+        <!--重置超神贵族等级-->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">重置超神贵族等级</h3>
+            </div>
+            <div class="panel-body">
+                <form method="post" novalidate="">
+
+                    <div class="form-group">
+                        <label>重置超神贵族等级的UID : </label>
+                        <a type="text" class="form-control">{{ account_data.account_uid }}</a>
+                    </div>
+
+                    <button type="button" id="btnResetNoble" class="btn btn-primary">确认</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+
+{% block js %}
+    <script type="text/javascript">
+        $(function () {
+            bindBtnNewAccount();
+            bindBtnAddBalance();
+            bindBtnSearchBalance();
+            bindBtnResetNoble();
+        });
+
+        function bindBtnNewAccount() {
+            $("#btnNewAccount").click(function () {
+                var hdid;
+                hdid = $("#hdid").val();
+                console.log(hdid)
+                $.ajax({
+                    url: "/operation/newacc/",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        app: $('#app').val(),
+                        uid: $("#account_uid").text(),
+                        hdid: $("#hdid").val()
+                    },
+                    success: function (res) {
+                        if (res.result === 0) {
+                            alert("设置成功");
+                        }
+                        if (res.result === 401) {
+                            alert("需要登录态");
+                        }
+                        if (res.result === 500) {
+                            alert("hdid不匹配,需要重新登录该uid和hdid后才能处理");
+                        }
+                    }
+                });
+            });
+        }
+
+        function bindBtnAddBalance() {
+            $('#btnAddBalance').click(function () {
+                $.ajax({
+                    url: "/operation/addmoney/",
+                    dataType: 'json',
+                    type: 'post',
+                    data: {
+                        appid: $("#coin").val(),
+                        quota: $("#quota").val(),
+                        uid: $("#account_uid").text()
+                    },
+                    success: function (res) {
+                        if (res.code === 1) {
+                            var value = res["allAmount"]
+                            $("#balance").text(value);
+                            $('#labelBalance').removeClass();
+                        } else {
+                            alert(res.error);
+                        }
+
+                    }
+                });
+            });
+        }
+
+        function bindBtnSearchBalance() {
+            $('#btnSearchBalance').click(function () {
+                $.ajax({
+                    url: '/operation/search_balance/',
+                    data: {
+                        appid: $("#coin").val(),
+                        uid: $("#account_uid").text()
+                    },
+                    dataType: 'json',
+                    type: 'post',
+                    success: function (res) {
+                        var value = res["allAmount"]
+                        $("#balance").text(value);
+                    }
+                });
+
+                $('#labelBalance').removeClass();
+            });
+        }
+
+        function bindBtnResetNoble() {
+            $("#btnResetNoble").click(function () {
+                $.ajax({
+                    url: "/operation/reset_noble/",
+                    dataType: 'json',
+                    type: 'post',
+                    data: {
+                       uid: $("#account_uid").text()
+                    },
+                    success: function (res) {
+                        if (res.status === 0) {
+                            alert("重置成功");
+                        }
+                    }
+                });
+            });
+        }
+
+    </script>
+{% endblock %}

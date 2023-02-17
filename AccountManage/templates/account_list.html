@@ -1,0 +1,370 @@
+{% extends 'layout.html' %}
+
+
+
+
+{% block css %}
+
+{% endblock %}
+
+
+
+
+{% block content %}
+    <div class="container" style="width: 1200px">
+        <!--添加测试账号、搜索按钮-->
+        <div style="margin-bottom: 10px">
+            <!-- <input type="button" value="新建订单1" class="btn btn-success" data-toggle="modal" data-target="#myModal"> -->
+            <input id="btnAdd" type="button" value="添加测试账号" class="btn btn-success">
+            <input id="btnFile" type="button" value="批量添加" class="btn btn-success">
+
+
+            <div style="float: right;width: 500px;" class="col-sm-6">
+                <form method="get">
+                    <div class="col-sm-6" style="padding: 0">
+                    <input type="text" name="txtSearch" class="form-control" placeholder="Search for..." value="{{ txt_search }}">
+                </div>
+                <div class="col-sm-3" style="padding: 0;">
+                    <select id="idSearch" class="form-control" name="idSearch">
+                        <option value="YY" {% if search_id == "YY" %} selected {% endif %}>YY</option>
+                        <option value="UID" {% if search_id == "UID" %} selected {% endif %}>UID</option>
+                        <option value="通行证" {% if search_id == "通行证" %} selected {% endif %}>通行证</option>
+                    </select>
+                </div>
+                <div class="col-sm-3" style="padding: 0;">
+                     <span>
+                         <button id="btnSearch" class="btn btn-default" type="submit">
+                             <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
+                             </button>
+                         </span>
+                    </div>
+                </form>
+
+
+            </div><!-- /.col-lg-6 -->
+
+        </div>
+
+        <div class="bs-example" data-example-id="simple-table">
+            <table class="table">
+                <caption><span class="glyphicon glyphicon-list" aria-hidden="true"></span>测试账号列表</caption>
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>归属人</th>
+                    <th>通行证</th>
+                    <th>YY号</th>
+                    <th>UID</th>
+                    <th>密码</th>
+                    <th>备注</th>
+                    <th>giao～giao～giao～</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in form_data %}
+                    <tr aid="{{ item.id }}">
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.tester_name }}</td>
+                        <td>{{ item.account_card }}</td>
+                        <td>{{ item.account_YY }}</td>
+                        <td>{{ item.account_uid }}</td>
+                        <td>{{ item.account_pwd }}</td>
+                        <td>{{ item.account_remarks }}</td>
+                        <td>
+                            <a href="/operation/{{ item.id }}">
+                                <input type="button" class="btn btn-primary btn-xs" value="操作">
+                            </a>
+
+                            <input aid="{{ item.id }}" type="button" class="btn btn-primary btn-xs btn-edit" value="修改">
+                            <input aid="{{ item.id }}" class="btn btn-danger btn-xs btn-delete" type="button"
+                                   value="删除">
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 分页列表 -->
+        <ul class="pagination">
+            {{ page_string }}
+        </ul>
+    </div>
+
+    <!--新建对话框，上传文件-->
+    <div class="modal fade" id="myUploadModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="panel-heading">
+                    <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                    批量上传
+                </div>
+                <form method="post" enctype="multipart/form-data" action="/account/multi/">
+
+                    <div class="clearfix">
+                        {% for field1 in form %}
+                            <div class="col-xs-6">
+                                <div class="form-group" style="position: relative;margin-bottom: 20px;">
+                                    <label>{{ field1.label }}</label>
+                                    {{ field1 }}
+                                    <span class="error-msg" style="color: red;position: absolute;"></span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+
+                    <div class="form-group" style="margin-left: 20px;">
+                        <input type="file" name="exc">
+                    </div>
+                    <input type="submit" value="上传" class="btn btn-info btn-sm" style="margin: 10px 20px 10px 20px">
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--新建对话框, 添加测试账号-->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">添加测试账号</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form id="formAdd">
+                        <div class="clearfix">
+                            {% for field in form_list %}
+                                <div class="col-xs-6">
+                                    <div id="formGroup" class="form-group"
+                                         style="position: relative;margin-bottom: 20px;">
+                                        <label>{{ field.label }}</label>
+                                        {{ field }}
+                                        <span class="error-msg" style="color: red;position: absolute;"></span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                    <button id="btnSave" type="button" class="btn btn-primary">保 存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 删除（对话框） -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+
+            <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                <h4>是否确定删除？</h4>
+                <p style="margin: 10px 0;"> 删除后，所有关联的相关数据都会被删除。</p>
+                <p style="text-align: right;">
+                    <button id="btnConfirmDelete" type="button" class="btn btn-danger">确 定</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+
+
+
+{% block js %}
+    <script type="text/javascript">
+        var EDIT_ID;
+        var DELETE_ID;
+
+        $(function () {
+            bindBtnAddEvent(); // 点击展开添加窗口
+            bindBtnSaveEvent();  // 点击保存添加或编辑
+            bindBtnDelEvent();  // 点击展开确认删除对话框
+            bindBtnConfirmDeleteEvent(); // 点击确认删除
+            bindBtnEditEvent();  // 点击编辑展开半窗
+            bindBtnShowUpload(); // 点击展开批量上传半窗
+        });
+
+        function bindBtnShowUpload() {
+            $('#btnFile').click(function () {
+                // 设置对话框的标题
+                $("#myModalLabel").text("批量上传文件");
+
+                // 点击新建按钮，显示对话框。
+                $("#myUploadModal").modal("show");
+            });
+        }
+
+        function bindBtnAddEvent() {
+            $("#btnAdd").click(function () {
+
+                EDIT_ID = undefined;
+
+                // 清空对话框中的数据
+                $("#formAdd")[0].reset();
+
+                // 设置对话框的标题
+                $("#myModalLabel").text("添加测试账号");
+
+                // 点击新建按钮，显示对话框。
+                $("#myModal").modal("show");
+
+            });
+        }
+
+        function doAdd() {
+            $.ajax({
+                url: '/account/add/',
+                type: 'post',
+                datatype: "json",
+                data: $('#formAdd').serialize(),
+                success: function (res) {
+                    if (res.status) {
+                        console.log(res.data);
+                        // alert("创建成功");
+
+                        // 清空表单  $("#formAdd")是jQuery对象 -> $("#formAdd")[0] DOM对象
+                        $("#formAdd")[0].reset();
+
+                        // 关闭对话框
+                        $('#myModal').modal('hide');
+
+                        // 刷新页面
+                        location.reload();
+
+                    } else {
+                        $.each(res.error, function (name, errorList) {
+                            $('#id_' + name).next().text(errorList[0]);
+                            console.log(res.error);
+                        });
+                    }
+                }
+            });
+        }
+
+        function doEdit() {
+            console.log(EDIT_ID);
+            $.ajax({
+                url: '/account/edit/' + "?aid=" + EDIT_ID,  //  -> /account/edit/?aid=12,
+                dataType: 'json',
+                type: 'post',
+                data: $('#formAdd').serialize(),
+                success: function (res) {
+                    if (res.status) {
+                        $("#formAdd")[0].reset();
+
+                        $("#myModal").modal('hide');
+
+                        location.reload();
+                    } else {
+                        if (res.tips) {
+                            alert(res.tips);
+                        } else {
+                            $.each(res.error, function (name, errorList) {
+                                $("#id_" + name).next().text(errorList[0]);
+                                // console.log(res.error);
+                                if (name === "account_belong") {
+
+                                    $('#formGroup').children(".error-msg").text(errorList[0]);
+                                }
+                            })
+                        }
+                    }
+                }
+            });
+        }
+
+        function bindBtnEditEvent() {
+
+            $(".btn-edit").click(function () {
+
+                $('#formAdd')[0].reset();
+
+                var aid = $(this).attr('aid');
+
+                EDIT_ID = aid;
+
+                $.ajax({
+                    url: '/account/detail/',
+                    dataType: 'json',
+                    type: 'get',
+                    data: {
+                        aid: aid
+                    },
+                    success: function (res) {
+                        if (res.status) {
+                            $.each(res.data, function (name, value) {
+                                $('#id_' + name).val(value);
+                            });
+                            console.log(res.data)
+                            $('#myModalLabel').text("编辑");
+
+                            $('#myModal').modal('show');
+                        } else {
+                            alert(res.error);
+                        }
+
+                    }
+                });
+
+            });
+        }
+
+        function bindBtnSaveEvent() {
+            $('#btnSave').click(function () {
+                // 清除错误信息
+                $('.error-msg').empty();
+
+                if (EDIT_ID) {
+                    // 编辑
+                    doEdit();
+                } else {
+                    // 添加
+                    doAdd();
+                }
+            });
+        }
+
+        function bindBtnDelEvent() {
+            $('.btn-delete').click(function () {
+                $('#deleteModal').modal("show");
+
+                DELETE_ID = $(this).attr('aid');
+            });
+        }
+
+        function bindBtnConfirmDeleteEvent() {
+            $('#btnConfirmDelete').click(function () {
+                console.log("点击了确认删除");
+                $.ajax({
+                    url: '/account/delete/',
+                    type: 'get',
+                    dataType: 'json',
+                    data: {
+                        aid: DELETE_ID
+                    },
+                    success: function (res) {
+                        if (res.status) {
+                            $("#deleteModal").modal("hide");
+
+                            location.reload();
+                        } else {
+                            alert(res.error);
+                        }
+                    }
+                });
+            });
+        }
+
+
+    </script>
+{% endblock %}

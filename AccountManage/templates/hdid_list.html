@@ -1,0 +1,316 @@
+{% extends 'layout.html' %}
+
+
+{% block css %}
+
+{% endblock %}
+
+
+{% block content %}
+    <div class="container" style="width: 1500px">
+
+        <!--添加测试账号、搜索按钮-->
+        <div style="margin-bottom: 10px">
+            <!-- <input type="button" value="新建订单1" class="btn btn-success" data-toggle="modal" data-target="#myModal"> -->
+            <input id="btnAdd" type="button" value="添加测试设备" class="btn btn-success">
+
+
+            <div style="float: right;width: 500px;" class="col-sm-6">
+                <form method="get">
+                    <div class="col-sm-6" style="padding: 0">
+                        <input type="text" name="txtSearch" class="form-control" placeholder="Search for..."
+                               value="{{ txt_search }}">
+                    </div>
+                    <div class="col-sm-3" style="padding: 0;">
+                        <select id="idSearch" class="form-control" name="idSearch">
+                            <option value="zhuiwan" {% if search_id == "zhuiwan" %} selected {% endif %}>Yo交友</option>
+                            <option value="yomi" {% if search_id == "yomi" %} selected {% endif %}>Yo语音</option>
+                            <option value="yaya" {% if search_id == "yaya" %} selected {% endif %}>YaYa</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3" style="padding: 0;">
+                     <span>
+                         <button id="btnSearch" class="btn btn-default" type="submit">
+                             <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
+                             </button>
+                         </span>
+                    </div>
+                </form>
+
+
+            </div><!-- /.col-lg-6 -->
+
+        </div>
+
+        <!--列表-->
+        <div class="bs-example" data-example-id="simple-table">
+            <table class="table">
+                <caption><span class="glyphicon glyphicon-list" aria-hidden="true"></span>测试机列表</caption>
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>测试机</th>
+                    <th>追玩</th>
+                    <th>Yo语音</th>
+                    <th>YaYa</th>
+                    <th> 备注</th>
+                    <th>giao~</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in form_data %}
+                    <tr hd_id="{{ item.id }}">
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.phone }}</td>
+                        <td>{{ item.zhuiwan }}</td>
+                        <td>{{ item.Yomi }}</td>
+                        <td>{{ item.YaYa }}</td>
+                        <td>{{ item.remark }}</td>
+                        <td>
+                            <input hd_id="{{ item.id }}" type="button" class="btn btn-primary btn-xs btn-edit"
+                                   value="修改">
+                            <input hd_id="{{ item.id }}" class="btn btn-xs btn-danger btn-delete" type="button"
+                                   value="删除">
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 分页列表 -->
+        <ul class="pagination">
+            {{ page_string }}
+        </ul>
+    </div>
+
+
+    <!--新建对话框, 添加测试账号-->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">添加测试设备</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form id="formAdd">
+                        <div class="clearfix">
+                            {% for field in form_list %}
+                                <div class="col-xs-6">
+                                    <div id="formGroup" class="form-group"
+                                         style="position: relative;margin-bottom: 20px;">
+                                        <label>{{ field.label }}</label>
+                                        {{ field }}
+                                        <span class="error-msg" style="color: red;position: absolute;"></span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                    <button id="btnSave" type="button" class="btn btn-primary">保 存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 删除（对话框） -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+
+            <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                <h4>是否确定删除？</h4>
+                <p style="margin: 10px 0;"> 删除后，所有关联的相关数据都会被删除。</p>
+                <p style="text-align: right;">
+                    <button id="btnConfirmDelete" type="button" class="btn btn-danger">确 定</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+
+{% block js %}
+
+    <script type="text/javascript">
+        var EDIT_ID;
+
+        $(function () {
+            bindBtnAddEvent(); // 点击展开添加窗口
+            bindBtnSaveEvent(); // 点击保存添加或编辑
+            bindBtnDelEvent(); // 点击展开确认删除对话框
+            bindBtnConfirmDeleteEvent(); // 点击确认删除
+            bindBtnEditEvent();  // 点击编辑展开半窗
+        });
+
+        function bindBtnAddEvent() {
+            $("#btnAdd").click(function () {
+                EDIT_ID = undefined;
+
+                // 清除对话框中的数据
+                $("#formAdd")[0].reset();
+
+                // 设置对话框标题
+                $("#myModalLable").text("添加测试设备");
+
+                // 点击添加按钮，显示对话框
+                $("#myModal").modal("show");
+            });
+        }
+
+        function doAdd() {
+            $.ajax({
+                url: "/hdid/add/",
+                datatype: "json",
+                type: "post",
+                data: $("#formAdd").serialize(),
+                success: function (res) {
+                    if (res.status) {
+                        console.log(res.data);
+                        // alert("创建成功");
+
+                        // 清空表单
+                        $("#formAdd")[0].reset();
+
+                        // 关闭对话框
+                        $("#myModal").modal('hide');
+
+                        // 刷新页面
+                        location.reload();
+
+                    } else {
+                        $.each(res.error, function (name, errorList) {
+                            // 拼接找到标签name，显示错误信息
+                            $("#id_" + name).next().text(errorList[0]);
+                            console.log(res.error)
+                        });
+                    }
+                }
+            });
+        }
+
+        function doEdit() {
+            console.log(EDIT_ID);
+
+            $.ajax({
+                url: "/hdid/edit/" + "?hd_id=" + EDIT_ID,  //  -> /account/edit/?aid=12,
+                dataType: "json",
+                type: "post",
+                data: $("#formAdd").serialize(),
+                success: function (res) {
+                    if (res.status) {
+                        $("#formAdd")[0].reset();
+
+                        $("#myModal").modal("hide");
+
+                        location.reload();
+                    } else {
+                        if (res.tips) {
+                            alert(res.tips);
+                        } else {
+                            $.each(res.error, function (name, errorList){
+                               $("#id_" + name).next().text(errorList[0]);
+
+                               if (name === "account_belong") {
+
+                                   $("#formGroup").children(".error-msg").text(errorList[0]);
+                               }
+                            });
+                        }
+                    }
+                }
+            });
+        }
+
+        function bindBtnSaveEvent() {
+            $("#btnSave").click(function () {
+                // 清除错信错误信息
+                $('.error-msg').empty();
+
+                if (EDIT_ID) {
+                    doEdit();
+                } else {
+                    doAdd();
+                }
+            });
+        }
+
+        function bindBtnDelEvent() {
+            $('.btn-delete').click(function () {
+                $('#deleteModal').modal("show");
+
+                DELETE_ID = $(this).attr('hd_id');
+            });
+        }
+
+        function bindBtnConfirmDeleteEvent() {
+            $('#btnConfirmDelete').click(function () {
+                console.log("点击了确认删除");
+                $.ajax({
+                    url: '/hdid/delete/',
+                    type: 'get',
+                    dataType: 'json',
+                    data: {
+                        hd_id: DELETE_ID
+                    },
+                    success: function (res) {
+                        if (res.status) {
+                            $("#deleteModal").modal("hide");
+
+                            location.reload();
+                        } else {
+                            alert(res.error);
+                        }
+                    }
+                });
+            });
+        }
+
+        function bindBtnEditEvent() {
+            $(".btn-edit").click(function () {
+
+                $('#formAdd')[0].reset();
+
+                var hd_id = $(this).attr("hd_id")
+
+                EDIT_ID = hd_id;
+
+                $.ajax({
+                    url: "/hdid/detail/",
+                    dataType: "json",
+                    type: "get",
+                    data: {
+                        hd_id: hd_id
+                    },
+                    success: function (res) {
+                        if (res.status) {
+                            $.each(res.data, function (name, value) {
+                                $('#id_' + name).val(value);
+                            });
+                            console.log(res.data)
+
+                            $("#myModalLable").text("编辑");
+
+                            $("#myModal").modal("show");
+                        } else {
+                            alert(res.error);
+                        }
+                    }
+                });
+
+            });
+        }
+
+    </script>
+{% endblock %}
