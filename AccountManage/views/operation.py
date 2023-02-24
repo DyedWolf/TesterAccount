@@ -27,12 +27,10 @@ cookie = "hd_newui=0.16506903087708658; hiido_ui=0.2686670761989436; _ga=GA1.2.2
 def operation_new_account(request):
     print(request.POST)
     hd_id = request.POST.get("hdid")
-    hdid = models.HDID.objects.filter(id=hd_id).values("Yomi", "zhuiwan", "YaYa").first()
-    print(hd_id, hdid)
-    print(hdid["zhuiwan"])
-    print(hdid["Yomi"])
+    hdid_data = models.HDID.objects.filter(id=hd_id).values("Yomi", "zhuiwan", "YaYa").first()
     app = request.POST.get("app")
     uid = request.POST.get("uid")
+    hdid = hdid_data[app]
     if hdid:
         url = "https://zhuiya-test.yy.com/web/reset/internal/resetUserFirst"
         header = {
@@ -41,7 +39,7 @@ def operation_new_account(request):
         param = {
             "uid": uid,
             "hdid": hdid,
-            "app": app
+            "app": app.lower()
         }
         res = requests.get(url=url, headers=header, params=param)
         print(res.url)
