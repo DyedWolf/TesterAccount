@@ -1,3 +1,4 @@
+from django.db import connection
 from django.shortcuts import render, HttpResponse, redirect
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -29,7 +30,19 @@ def hdid_list(request):
 
 @csrf_exempt
 def hdid_add(request):
-    form = HDID(data=request.POST)
+    # form = HDID(data)
+
+    data = request.POST.copy()
+    if not data["remark"]:
+        data["remark"] = "/"
+    if not data["zhuiwan"]:
+        data["zhuiwan"] = "暂无"
+    if not data["Yomi"]:
+        data["Yomi"] = "暂无"
+    if not data["YaYa"]:
+        data["YaYa"] = "暂无"
+
+    form = HDID(data)
     if form.is_valid():
         form.save()
         result = {"status": True}
@@ -57,8 +70,15 @@ def hdid_edit(request):
         return JsonResponse(result)
 
     data = request.POST.copy()
+
     if not data["remark"]:
         data["remark"] = "/"
+    if not data["zhuiwan"]:
+        data["zhuiwan"] = "暂无"
+    if not data["Yomi"]:
+        data["Yomi"] = "暂无"
+    if not data["YaYa"]:
+        data["YaYa"] = "暂无"
 
     form = HDID(data=data, instance=row_object)
     if form.is_valid():

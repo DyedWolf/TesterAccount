@@ -56,6 +56,7 @@ def account_list(request):
             "page_string": page_string,
             "search_id": search_id
         }
+        print(context["form_list"])
         return render(request, "account_list.html", context)
 
 
