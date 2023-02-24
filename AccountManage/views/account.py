@@ -176,3 +176,7 @@ def cal(request):
     return render(request, "ssss.html", result_dict)
 
 
+@csrf_exempt
+def index(request):
+    if request.method == "GET":
+        return render(request, "index.html")

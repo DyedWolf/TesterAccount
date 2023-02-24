@@ -20,6 +20,7 @@ from AccountManage.views import tester, login, account, operation, hdid
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path('sss/', account.cal),
+    path('index/', account.index),
 
     # 登录
     path('login/', login.login),

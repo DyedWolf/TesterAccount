@@ -76,7 +76,7 @@
                         <label>新账号登录的APP : </label>
                         <select name="app" class="form-control" required="" id="app">
                             <option value="yomi" selected="">Yo语音</option>
-                            <option value="zhuiwan">追玩</option>
+                            <option value="zhuiwan">Yo交友</option>
                         </select>
                     </div>
 
@@ -122,7 +122,7 @@
             $("#btnNewAccount").click(function () {
                 var hdid;
                 hdid = $("#hdid").val();
-                console.log(hdid)
+                console.log(hdid)iwan
                 $.ajax({
                     url: "/operation/newacc/",
                     type: "post",

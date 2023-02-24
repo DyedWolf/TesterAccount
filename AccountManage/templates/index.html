@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="icon" type="image/gif" href="images/logo.ico">
+  <title>SVGA动画预览</title>
+  <link rel="stylesheet" href="./static/css/common.css">
+  <link rel="stylesheet" href="./static/css/svga.css">
+
+  <meta name="description" content="SVGA 是一种同时兼容 iOS / Android / Flutter / Web 多个平台的动画格式。">
+  <meta name="keywords" content="SVGA, 直播礼物动画，高性能动画, 跨平台动画方案, 矢量动画,动画预览,svga预览,svga动画预览,svga动画播放器,svga模拟器,svga在线预览">
+  <!--[if lt IE 10]>
+    <script src="static/js/svga.ie.min.js"></script>
+    <![endif]-->
+  <!--[if gte IE 10]><!-->
+  <script src="static/js/svga.min.js"></script>
+  <!--<![endif]-->
+
+</head>
+
+<body>
+
+  <!--content-->
+  <div class="content common-mar-top common-min-width" style="padding-top: 0;">
+    <div class="common-contain">
+      <div class="common-wrapper common-flex common-mar-t-big common-center-x">
+        <div class="svga-content">
+          <div class="phone-box  common-flex common-center-y common-center-x" style="margin-top: 0;padding: 0;">
+            <div class="common-size-border drag-box common-bg-fff phone common-flex common-center-x common-center-y"
+              id="demoCanvas"></div>
+
+            <div class="common-bg-fff phone common-flex common-center-x common-center-y null-svga" id="drag" style="border: 10px solid #f4f4f5;">
+              <div class="common-text-center">
+                <img class="kong-img" src="images/kong.png" alt="">
+                <div class="common-text-f14 common-color-A9ABAD common-mar-t-sm svga-kong" style="color: #666;">
+                  体验预览SVGA动画<br>请将<mm style="color:red">SVGA文件</mm>拖拽至此区域
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="choose common-text-center">
+            <ul class="common-inline-block clearfix">
+              <li class="choose-color common-left"></li>
+              <li class="choose-color common-left"></li>
+              <li class="choose-color common-left"></li>
+              <li class="choose-color common-left"></li>
+              <li class="choose-color common-left"></li>
+              <li class="choose-color common-left"></li>
+            </ul>
+            <ul class="model-ul common-mar-t-min clearfix">
+              <li
+                class="mode-item active common-text-f14 common-color-292D33 common-left common-text-center common-size-border"
+                _setMode="AspectFit">AspectFit
+              </li>
+              <li
+                class="mode-item common-text-f14 common-color-292D33 common-left common-text-center common-size-border"
+                _setMode="AspectFill">AspectFill
+              </li>
+              <li
+                class="mode-item common-text-f14 common-color-292D33 common-left common-text-center common-size-border"
+                _setMode="Fill">Fill
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="preview-list common-mar-l-sm">
+          <div class="preview-detail common-size-border common-text-f14 common-text-left common-color-292D33">
+            <div class="preview-scroll">
+              <div class="kong-title common-text-f14 common-color-A9ABAD common-text-center">请先添加预览图片</div>
+              <pre class="preview-pre common-pad-sm common-size-border"></pre>
+            </div>
+          </div>
+          <div class="svga-text common-pad-sm common-size-border common-mar-t-sm">
+            <div class="kong-text common-text-f14 common-color-A9ABAD common-text-center">请先添加预览图片</div>
+
+            <div class="svga-detail">
+              <div class="preview-img common-text-center"><img class="myImgs" src="" alt=""></div>
+              <div class="common-flex common-space-between common-pad-tb-min">
+                <div class="common-text-f16 common-color-292D33" style="color: red;font-size: 14px">内存占用：<span
+                    class="memory">0 M</span></div>
+                <div class="common-text-f16 common-color-292D33" style="color: red;font-size: 14px">文件大小：<span
+                    class="svga-size common-mar-r-min"></span></div>
+                <div class="common-text-f16 common-color-292D33" style="color: red;font-size: 14px">时长：<span
+                    class="animate-time">0s</span></div>
+              </div>
+
+              <ul class="animate-detail-list common-text-left common-text-f14 common-color-292D33">
+                <!-- <li class="common-pad-tb-min"></li> -->
+              </ul>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+
+  <script src="static/js/jQuery.js"></script>
+  <script src="static/js/config.js"></script>
+  <script src="static/js/jquery.Huploadify.js"></script>
+
+  <script src="static/js/howler.core.min.js"></script>
+  <script src="static/js/svga.js"></script>
+</body>
+
+</html>
