@@ -167,7 +167,17 @@ def reset_noble(request):
 
 @csrf_exempt
 def reset_sign_log(request):
-    data = request.POST
-    print(data)
+    signDate = str(request.POST.get("date")).replace("-", "")
+    uid = request.POST.get("uid")
+    app = request.POST.get("app")
+    print(signDate, uid, app)
+    url = "https://zhuiya-test.yy.com/web/test/public/sign/delete?type=6"
+    data = {
+        "signDate": signDate,
+        "app": app,
+        "uid": uid
+    }
+    res = requests.get(url=url, params=data)
+    print(res.content)
     result = {"status": True}
     return JsonResponse(result)
