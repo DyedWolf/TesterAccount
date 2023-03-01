@@ -109,6 +109,38 @@
         </div>
 
 
+        <!--删除签到记录-->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">删除签到记录</h3>
+            </div>
+            <div class="panel-body">
+                <form method="post" novalidate="">
+
+                    <div class="form-group">
+                        <label>已签到的UID : </label>
+                        <a type="text" class="form-control">{{ account_data.account_uid }}</a>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="date" name="dateSign" id="dateSign">
+                    </div>
+
+                    <div class="form-group">
+                        <label>已签到的APP : </label>
+                        <select name="appSign" class="form-control" required="" id="appSign">
+                            <option value="Yomi">Yo语音</option>
+                            <option value="zhuiwan">Yo交友</option>
+                            <option value="YaYa">YaYa</option>
+                        </select>
+                    </div>
+
+                    <button type="button" id="btnSignAccount" class="btn btn-primary">确认</button>
+                </form>
+            </div>
+        </div>
+
+
         <!--重置超神贵族等级-->
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -139,6 +171,7 @@
             bindBtnAddBalance();
             bindBtnSearchBalance();
             bindBtnResetNoble();
+            bindBtnResetSignLog();
         });
 
         function bindBtnNewAccount() {
@@ -215,6 +248,28 @@
                 $('#labelBalance').removeClass();
             });
         }
+
+        function bindBtnResetSignLog(){
+
+            console.log($('#dateSign').val());
+            $("#btnSignAccount").click(function(){
+
+                $.ajax({
+                    url: '/operation/reset_sign_log',
+                    dataType: 'json',
+                    type: 'POST',
+                    data: {
+                        app: $('#appSign').val(),
+                        uid: $('#account_uid').text(),
+                        date: $('#dateSign').val()
+                    },
+                    success: function (res) {
+
+                    }
+                });
+            });
+        }
+
 
         function bindBtnResetNoble() {
             $("#btnResetNoble").click(function () {

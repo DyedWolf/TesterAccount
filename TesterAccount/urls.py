@@ -47,6 +47,7 @@ urlpatterns = [
     path('operation/addmoney/', operation.operation_balance),
     path('operation/search_balance/', operation.search_balance),
     path('operation/reset_noble/', operation.reset_noble),
+    path('operation/reset_sign_log/', operation.reset_sign_log),
 
     # 测试机HDID
     path('hdid/list/', hdid.hdid_list),
