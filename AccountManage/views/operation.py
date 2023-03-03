@@ -178,6 +178,7 @@ def reset_sign_log(request):
         "uid": uid
     }
     res = requests.get(url=url, params=data)
+    print(res.url)
     print(res.content)
     result = {"status": True}
     return JsonResponse(result)
