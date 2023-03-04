@@ -174,11 +174,12 @@ def reset_sign_log(request):
     url = "https://zhuiya-test.yy.com/web/test/public/sign/delete?type=6"
     data = {
         "signDate": signDate,
-        "app": app,
+        "app": app.lower(),
         "uid": uid
     }
     res = requests.get(url=url, params=data)
     print(res.url)
-    print(res.content)
-    result = {"status": True}
-    return JsonResponse(result)
+    print(json.loads(res.content))
+    if json.loads(res.content)["result"] == 0:
+        return JsonResponse(json.loads(res.content))
+    return JsonResponse(json.loads(res.content))
