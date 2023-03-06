@@ -25,6 +25,7 @@ cookie = "hd_newui=0.16506903087708658; hiido_ui=0.2686670761989436; _ga=GA1.2.2
 
 @csrf_exempt
 def operation_new_account(request):
+    """ 查询账号信息 """
     print(request.POST)
     hd_id = request.POST.get("hdid")
     hdid_data = models.HDID.objects.filter(id=hd_id).values("Yomi", "zhuiwan", "YaYa").first()
@@ -51,6 +52,7 @@ def operation_new_account(request):
 
 @csrf_exempt
 def operation_balance(request):
+    """ 添加货币 """
     print(request.POST)
     appid = request.POST.get("appid")
     quota = request.POST.get("quota")
@@ -103,6 +105,7 @@ def operation_balance(request):
 
 @csrf_exempt
 def search_balance(request):
+    """ 查询余额 """
     print(request.POST)
     appid = request.POST.get("appid")
     uid = request.POST.get("uid")
@@ -151,6 +154,7 @@ def search_balance(request):
 
 @csrf_exempt
 def reset_noble(request):
+    """ 清除超神贵族等级 """
     print(request.POST)
     uid = request.POST.get("uid")
 
@@ -167,6 +171,7 @@ def reset_noble(request):
 
 @csrf_exempt
 def reset_sign_log(request):
+    """ 清除签到 """
     signDate = str(request.POST.get("date")).replace("-", "")
     uid = request.POST.get("uid")
     app = request.POST.get("app")
