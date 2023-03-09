@@ -103,6 +103,14 @@
                         </select>
                     </div>
 
+                    <div class="form-group">
+                        <label>正式/测试环境选择 : </label>
+                        <select name="env" class="form-control" required="" id="env">
+                            <option value="official">正式环境</option>
+                            <option value="test">测试环境</option>
+                        </select>
+                    </div>
+
                     <button type="button" id="btnNewAccount" class="btn btn-primary">确认</button>
                 </form>
             </div>
@@ -190,7 +198,8 @@
                         app: $('#app').val(),
                         uid: $("#account_uid").text(),
                         {#hdid: $("#hdid").val()#}
-                        hdid: $("#hd_id").val()
+                        hdid: $("#hd_id").val(),
+                        env: $("#env").val()
                     },
                     success: function (res) {
                         if (res.result === 0) {
@@ -201,6 +210,9 @@
                         }
                         if (res.result === 500) {
                             alert("hdid不匹配,需要重新登录该uid和hdid后才能处理");
+                        }
+                        else {
+                            alert("未知错误");
                         }
                     }
                 });
