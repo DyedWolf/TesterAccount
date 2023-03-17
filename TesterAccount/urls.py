@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from AccountManage.views import tester, login, account, operation, hdid
+from AccountManage.views import tester, login, account, operation, hdid, information
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
@@ -25,6 +25,9 @@ urlpatterns = [
     # 登录
     path('login/', login.login),
     path('logout/', login.logout),
+
+    # 我的信息
+    path('my_information/', information.my_information),
 
     # 测试人员列表
     path('tester/list/', tester.tester_list),

@@ -6,7 +6,7 @@
 
 
 {% block content %}
-    <div class="container">
+    <div class="container" style="width: 1000px">
         <div style="margin: 10px;">
             <label> UID：</label>
             <a id="account_uid">{{ account_data.account_uid }}</a>
@@ -103,6 +103,14 @@
                         </select>
                     </div>
 
+                    <div class="form-group">
+                        <label>正式/测试环境选择 : </label>
+                        <select name="env" class="form-control" required="" id="env">
+                            <option value="official">正式环境</option>
+                            <option value="test">测试环境</option>
+                        </select>
+                    </div>
+
                     <button type="button" id="btnNewAccount" class="btn btn-primary">确认</button>
                 </form>
             </div>
@@ -123,7 +131,8 @@
                     </div>
 
                     <div class="form-group">
-                        <input type="date" name="dateSign" id="dateSign">
+                        <label>删除签到的日期：</label>
+                        <input type="date" class="form-control" name="dateSign" id="dateSign" />
                     </div>
 
                     <div class="form-group">
@@ -166,6 +175,9 @@
 
 {% block js %}
     <script type="text/javascript">
+
+        document.getElementById("dateSign").value = new Date().toISOString().substring(0, 10);
+
         $(function () {
             bindBtnNewAccount();
             bindBtnAddBalance();
@@ -187,17 +199,15 @@
                         app: $('#app').val(),
                         uid: $("#account_uid").text(),
                         {#hdid: $("#hdid").val()#}
-                        hdid: $("#hd_id").val()
+                        hdid: $("#hd_id").val(),
+                        env: $("#env").val()
                     },
                     success: function (res) {
                         if (res.result === 0) {
-                            alert("设置成功");
+                            alert(res["msg"]);
                         }
-                        if (res.result === 401) {
-                            alert("需要登录态");
-                        }
-                        if (res.result === 500) {
-                            alert("hdid不匹配,需要重新登录该uid和hdid后才能处理");
+                        if (res.result !== 0) {
+                            alert(res["msg"]);
                         }
                     }
                 });
@@ -249,10 +259,10 @@
             });
         }
 
-        function bindBtnResetSignLog(){
+        function bindBtnResetSignLog() {
 
             console.log($('#dateSign').val());
-            $("#btnSignAccount").click(function(){
+            $("#btnSignAccount").click(function () {
 
                 $.ajax({
                     url: '/operation/reset_sign_log/',
@@ -263,13 +273,21 @@
                         uid: $('#account_uid').text(),
                         date: $('#dateSign').val()
                     },
-                    success: function (res) {
 
+                    success: function (res) {
+                        console.log(res.result)
+                        console.log(res)
+                        console.log(res.error)
+                        if (res.result === 0 ) {
+
+                            alert("重置成功");
+                        } else {
+                            alert(res.error)
+                        }
                     }
                 });
             });
         }
-
 
         function bindBtnResetNoble() {
             $("#btnResetNoble").click(function () {
@@ -283,6 +301,8 @@
                     success: function (res) {
                         if (res.status === 0) {
                             alert("重置成功");
+                        } else {
+                            alert(res.error)
                         }
                     }
                 });

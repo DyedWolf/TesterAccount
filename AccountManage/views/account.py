@@ -37,7 +37,7 @@ def account_list(request):
                 sql = "SELECT a.id,a.account_uid,a.account_YY,a.account_card,a.account_pwd,b.tester_name,a.account_remarks FROM (SELECT CASE WHEN iu.`account_belong_id` = '{}' THEN 0 ELSE iu.`account_belong_id` END AS iid,iu.* FROM accountmanage_account iu) a ,accountmanage_testerinfo b WHERE a.`account_belong_id`=b.id ORDER BY a.iid ASC;".format(
                     aid)
 
-            print(sql)
+            # print(sql)
             cursor.execute(sql)
             sql_data = cursor.fetchall()  # 获取一条数据, 使用fetchone()
             colums = [col[0] for col in cursor.description]
@@ -56,7 +56,7 @@ def account_list(request):
             "page_string": page_string,
             "search_id": search_id
         }
-        print(context["form_list"])
+        # print(context["form_list"])
         return render(request, "account_list.html", context)
 
 

@@ -20,19 +20,20 @@ def operation_list(request, aid):
     return render(request, "operation_list.html", result_data)
 
 
-cookie = "hd_newui=0.16506903087708658; hiido_ui=0.2686670761989436; _ga=GA1.2.29981751.1676343893; ab_sr=1.0.1_MTMyNGE2MzRlNmE4ZGQ3MzVkNDk5ZDEyOGVjMGFjNTIwZGYxNzgzZjM5Njk3MGRjZjRmMTUxNWY3M2I0ZWE2MmMxZmQ1MTE5NTBmNWJjYjNhZGFkN2U0M2U2YzcwNzg2MWM2MWY2MmYwMmRiZGZhMmQ1NjZlNDVjZjA3MDNiZWQ0YjcyYjJhZjAwZTk3OGNmNTMyM2Y1YzhjODcxOWY0Nw==; udb_c=; yyuid=50047479; username=dw_wangchengqing; password=0771D09F6DAA17A46F3D2767DEC7ADF22CE98F20; osinfo=4B10F09D01FE6FA2754767E99FF907162DFA8083; udb_oar=07F813B54346815977F838E550F8CCC77CEC9612FBB9E97E4298828644BFF30D397B6B820744D09820C9331E169E1D6E14AB12C3F4F0ACD9D9237608F9EAE7F4491DAEEC428E303CC640439460BB62A8F3A5798110DAECDC002D71B491EE01EC8821FBE49E22E9B75F57F310AEBD16BA4473834FE097F694F05D42C0299E90F12D9204DFE834E1F035C7DBADA211AD5BB22727D22B6A832A81F1C7E192E4382E683D5F3EA5AB14AD2B2C89EAFF37E868CDE4C186497D5D5D420CE988A6B732663EE992E121CA00DA1E657DEDF92D4B46972AB5FB8E25A5C05F8E906E10389A1BE3F9CFD2B4280E63719EC3F867D080D7520FFFCA4AB744DC46BF9DA764E8B5CF26D4691B87BC3E6A9F246EB881342B7E676DE0EF79064BD2C920CBE25DC1581AE5336A2E396A9159ADDE1114CAB4C2D2F827562FC08EE29B37CB0CE1BBF0FFDF45CAB9DC4E2D4022D17977F7BB667A32D6B9C13F763961CC4E96B92B2D717F622EB0F4A8EE221E61EA6E5D7262993024ED178946E4C6950FF71F280B75D0DB37; _gid=GA1.2.1804574923.1677655641"
+cookie = "hd_newui=0.9646797615568374; hiido_ui=0.719384400099655; _ga=GA1.2.1490452536.1678355881; Hm_lvt_c493393610cdccbddc1f124d567e36ab=1678366743,1678876908; ab_sr=1.0.1_YjFiOTgwMWQzMDkyOTY0YTgyMjc1OGQ3YzY3ZDBmOTc0MjU4NTFkYjI4MzhkNWQzYWE2YjA3OWIyZDU1MDE4NzUzMGY1OWJlZGMyODlhYzk5YjI2ZGJmZGNkNjUzOWRiYjNjYmQ4ZjlmNDZlN2I1YzY2OTdkMmUwZGM2MWRiNGJhZWUzZmNkMTU1ZGQ5Mjg0YWI4OTM0NDA0ZGRjNDgwMw==; udb_c=; yyuid=50047479; username=dw_wangchengqing; password=8604A3C15FA33B00A1AEC4D64CFDF4914743DBC7; osinfo=B3FC5950A98CB4AEC38D1232043E8E5F16F73401; udb_oar=752DF2638C80730CF43F7E5F34C91FEE01D517BD6F70CFEF0957DDA030FF993D1325FB14F38FD0DE4D2281E3AFD97A96A525181B17835DCCEEA0592D153FC2264B67E337D378ECEA6D151A273A856C5C8679AFCED14D56C77B24C20EF7CF088F6D5064DB06701AC4645B3FE4414E1D9C8C0405905BFF0858C38E953118BF555C3D041C514271B37FB2617E73FEFFD565981C371A9DB5EB01DD8A471F8E0E884ED791828B6E95FB0631D6317D6CA54DF373CB40600D9876DB3665F4F48A8FD5DF43D9B9CC84F58B807E19FC5C80DD146387783934CB29C0FF701F7F0EEFE15BFA63AA43D3AA2727743CF729261BAD56AD827EA5289286CEF7BFCD06455C0F77030DD6A40BA1F303BC6622D96D43D4D88876980A1893DE720BE56E254980BB2ADCE5A6A41724F8FD0974988DA2DC19BBDC969A7845E8C4465ADD5715D51116A52A81D97EAA512AB3FA3EA26A1BD4F1057C3B0C0A4F9FF1470110EA6F390D4DFE35B448DCD2F1E5E76FAD96A469FDC25962FBAD123FCBC0A7DC7289A5A887775A1C"
 
 
 @csrf_exempt
 def operation_new_account(request):
+    """ 设置为新账号 """
     print(request.POST)
     hd_id = request.POST.get("hdid")
     hdid_data = models.HDID.objects.filter(id=hd_id).values("Yomi", "zhuiwan", "YaYa").first()
     app = request.POST.get("app")
     uid = request.POST.get("uid")
+    env = request.POST.get("env")
     hdid = hdid_data[app]
     if hdid:
-        url = "https://zhuiya-test.yy.com/web/reset/internal/resetUserFirst"
         header = {
             "cookie": cookie
         }
@@ -41,6 +42,10 @@ def operation_new_account(request):
             "hdid": hdid,
             "app": app.lower()
         }
+
+        url = "https://zhuiya-test.yy.com/web/reset/internal/resetUserFirst"
+        if env == "official":
+            url = "https://zhuiya.yy.com/web/reset/internal/resetUserFirst"
         res = requests.get(url=url, headers=header, params=param)
         print(res.url)
         print(json.loads(res.content))
@@ -51,6 +56,7 @@ def operation_new_account(request):
 
 @csrf_exempt
 def operation_balance(request):
+    """ 添加货币 """
     print(request.POST)
     appid = request.POST.get("appid")
     quota = request.POST.get("quota")
@@ -103,6 +109,7 @@ def operation_balance(request):
 
 @csrf_exempt
 def search_balance(request):
+    """ 查询余额 """
     print(request.POST)
     appid = request.POST.get("appid")
     uid = request.POST.get("uid")
@@ -151,6 +158,7 @@ def search_balance(request):
 
 @csrf_exempt
 def reset_noble(request):
+    """ 清除超神贵族等级 """
     print(request.POST)
     uid = request.POST.get("uid")
 
@@ -167,6 +175,7 @@ def reset_noble(request):
 
 @csrf_exempt
 def reset_sign_log(request):
+    """ 清除签到 """
     signDate = str(request.POST.get("date")).replace("-", "")
     uid = request.POST.get("uid")
     app = request.POST.get("app")
@@ -174,12 +183,13 @@ def reset_sign_log(request):
     url = "https://zhuiya-test.yy.com/web/test/public/sign/delete?type=6"
     data = {
         "signDate": signDate,
-        "app": app,
+        "app": app.lower(),
         "uid": uid
     }
     res = requests.get(url=url, params=data)
     print(res)
     print(res.url)
-    print(res.content)
-    result = {"status": True}
-    return JsonResponse(result)
+    print(json.loads(res.content))
+    if json.loads(res.content)["result"] == 0:
+        return JsonResponse(json.loads(res.content))
+    return JsonResponse(json.loads(res.content))
