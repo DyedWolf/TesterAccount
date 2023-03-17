@@ -9,4 +9,5 @@ from AccountManage.utils.pagination import Pagination
 
 
 def my_information(request):
-    pass
+
+    return render(request, "my_information.html")

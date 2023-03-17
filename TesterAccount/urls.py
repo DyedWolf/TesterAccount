@@ -27,7 +27,7 @@ urlpatterns = [
     path('logout/', login.logout),
 
     # 我的信息
-    path('my/infomation/', information.my_information),
+    path('my_information/', information.my_information),
 
     # 测试人员列表
     path('tester/list/', tester.tester_list),
