@@ -67,7 +67,7 @@ def account_multi(request):
         form = Upload()
         return render(request, "account_upload.html", {"form": form})
     account_belong_id = request.POST.get('account_belong')
-    file_object = request.FILES.get("exc")
+    file_object = request.FILES.get("excel")
     wb = load_workbook(file_object)
     sheet = wb.worksheets[0]
     for row in sheet.iter_rows(min_row=2):
@@ -125,15 +125,6 @@ def account_edit(request):
     form = Account(data=request.POST, instance=row_object)
     print(request.POST)
     if form.is_valid():
-        # form.save()
-        # account_uid = request.POST.get("account_uid")
-        # account_YY = request.POST.get("account_YY")
-        # account_card = request.POST.get("account_card")
-        # print(type(account_card))
-        # account_belong = request.POST.get("account_belong")
-        # account_remarks = request.POST.get("account_remarks")
-        # account_pwd = request.POST.get("account_pwd")
-        # print(account_uid, account_YY, account_card, account_belong, account_remarks, account_pwd)
         with connection.cursor() as cursor:
             sql = "update accountmanage_account set account_uid='{}',account_YY='{}',account_card='{}',account_belong_id={},account_remarks='{}',account_pwd='{}' where id = {}".format(
                 request.POST.get("account_uid"), request.POST.get("account_YY"), request.POST.get("account_card"), request.POST.get("account_belong"), request.POST.get("account_remarks"), request.POST.get("account_pwd"), aid)

@@ -96,13 +96,16 @@
     <div class="modal fade" id="myUploadModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="panel-heading">
-                    <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
-                    批量上传
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">批量上传</h4>
                 </div>
+
+
                 <form method="post" enctype="multipart/form-data" action="/account/multi/">
 
-                    <div class="clearfix">
+                    <div class="clearfix" style="margin-top: 10px;">
                         {% for field1 in form %}
                             <div class="col-xs-6">
                                 <div class="form-group" style="position: relative;margin-bottom: 20px;">
@@ -118,6 +121,7 @@
                         <span>
                             <a style="color: red">Excel：|通行证|密码|uid|YY|</a>
                         </span>
+
                         <span style="padding: 10px">
                             <a href="/download_excel/">下载模板</a>
                         </span>
@@ -149,7 +153,8 @@
                         <div class="clearfix">
                             <div class="col-xs-6">
                                 <label>测试账号归属</label>
-                                <select name="account_belong" class="form-control" required="" id="id_account_belong_id">
+                                <select name="account_belong" class="form-control" required=""
+                                        id="id_account_belong_id">
 
                                 </select>
                             </div>
@@ -237,23 +242,23 @@
                 // 点击新建按钮，显示对话框。
                 $("#myModal").modal("show");
 
-                               $.ajax({
-                url: '/account/option/',
-                dataType: 'json',
-                type: 'get',
-                success: function (res) {
-                    console.log(res.data)
-                    if (res.status) {
-                        $.each(res.data, function (name, value) {
-                            console.log(name,value)
-                            var option = "<option value=\"" + value[0] + "\"";
-                            option += ">" + value[1] + "</option>"; //动态添加数据
-                            $('#id_account_belong_id').append(option);
-                        });
-                        $('#id_account_belong_id').val(valueOption);
+                $.ajax({
+                    url: '/account/option/',
+                    dataType: 'json',
+                    type: 'get',
+                    success: function (res) {
+                        console.log(res.data)
+                        if (res.status) {
+                            $.each(res.data, function (name, value) {
+                                console.log(name, value)
+                                var option = "<option value=\"" + value[0] + "\"";
+                                option += ">" + value[1] + "</option>"; //动态添加数据
+                                $('#id_account_belong_id').append(option);
+                            });
+                            $('#id_account_belong_id').val(valueOption);
+                        }
                     }
-                }
-            });
+                });
 
             });
         }
@@ -359,23 +364,23 @@
                 });
 
 
-               $.ajax({
-                url: '/account/option/',
-                dataType: 'json',
-                type: 'get',
-                success: function (res) {
-                    console.log(res.data)
-                    if (res.status) {
-                        $.each(res.data, function (name, value) {
-                            console.log(name,value)
-                            var option = "<option value=\"" + value[0] + "\"";
-                            option += ">" + value[1] + "</option>"; //动态添加数据
-                            $('#id_account_belong_id').append(option);
-                        });
-                        $('#id_account_belong_id').val(valueOption);
+                $.ajax({
+                    url: '/account/option/',
+                    dataType: 'json',
+                    type: 'get',
+                    success: function (res) {
+                        console.log(res.data)
+                        if (res.status) {
+                            $.each(res.data, function (name, value) {
+                                console.log(name, value)
+                                var option = "<option value=\"" + value[0] + "\"";
+                                option += ">" + value[1] + "</option>"; //动态添加数据
+                                $('#id_account_belong_id').append(option);
+                            });
+                            $('#id_account_belong_id').val(valueOption);
+                        }
                     }
-                }
-            });
+                });
             });
         }
 
