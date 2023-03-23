@@ -132,7 +132,7 @@
 
                     <div class="form-group">
                         <label>删除签到的日期：</label>
-                        <input type="date" class="form-control" name="dateSign" id="dateSign" />
+                        <input type="date" class="form-control" name="dateSign" id="dateSign"/>
                     </div>
 
                     <div class="form-group">
@@ -168,6 +168,17 @@
             </div>
         </div>
 
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">optionTest</h3>
+            </div>
+            <div class="panel-body">
+                <select name="optionTest" class="form-control" required="" id="optionTest">
+
+                </select>
+            </div>
+        </div>
     </div>
 
 {% endblock %}
@@ -184,7 +195,28 @@
             bindBtnSearchBalance();
             bindBtnResetNoble();
             bindBtnResetSignLog();
+            binBtnOptionTest();
         });
+
+        function binBtnOptionTest() {
+            $.ajax({
+                url: '/account/option/',
+                dataType: 'json',
+                type: 'get',
+                success: function (res) {
+                    console.log(res)
+                    if (res.status) {
+                        $.each(res.data, function (name, value) {
+                            var option = "<option value=\"" + value[0] + "\"";
+                            option += ">" + value[1] + "</option>"; //动态添加数据
+                            $('#optionTest').append(option);
+                        });
+                        $('#optionTest').val(3);
+                    }
+                }
+            });
+        }
+
 
         function bindBtnNewAccount() {
             $("#btnNewAccount").click(function () {
@@ -278,7 +310,7 @@
                         console.log(res.result)
                         console.log(res)
                         console.log(res.error)
-                        if (res.result === 0 ) {
+                        if (res.result === 0) {
 
                             alert("重置成功");
                         } else {

@@ -22,16 +22,17 @@
             <div style="float: right;width: 500px;" class="col-sm-6">
                 <form method="get">
                     <div class="col-sm-6" style="padding: 0">
-                    <input type="text" name="txtSearch" class="form-control" placeholder="Search for..." value="{{ txt_search }}">
-                </div>
-                <div class="col-sm-3" style="padding: 0;">
-                    <select id="idSearch" class="form-control" name="idSearch">
-                        <option value="YY" {% if search_id == "YY" %} selected {% endif %}>YY</option>
-                        <option value="UID" {% if search_id == "UID" %} selected {% endif %}>UID</option>
-                        <option value="通行证" {% if search_id == "通行证" %} selected {% endif %}>通行证</option>
-                    </select>
-                </div>
-                <div class="col-sm-3" style="padding: 0;">
+                        <input type="text" name="txtSearch" class="form-control" placeholder="Search for..."
+                               value="{{ txt_search }}">
+                    </div>
+                    <div class="col-sm-3" style="padding: 0;">
+                        <select id="idSearch" class="form-control" name="idSearch">
+                            <option value="YY" {% if search_id == "YY" %} selected {% endif %}>YY</option>
+                            <option value="UID" {% if search_id == "UID" %} selected {% endif %}>UID</option>
+                            <option value="通行证" {% if search_id == "通行证" %} selected {% endif %}>通行证</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3" style="padding: 0;">
                      <span>
                          <button id="btnSearch" class="btn btn-default" type="submit">
                              <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
@@ -140,8 +141,15 @@
 
                     <form id="formAdd">
                         <div class="clearfix">
+                            <div class="col-xs-6">
+                                <label>测试账号归属</label>
+                                <select name="account_belong" class="form-control" required="" id="id_account_belong_id">
+
+                                </select>
+                            </div>
                             {% for field in form_list %}
                                 <div class="col-xs-6">
+
                                     <div id="formGroup" class="form-group"
                                          style="position: relative;margin-bottom: 20px;">
                                         <label>{{ field.label }}</label>
@@ -215,12 +223,31 @@
 
                 // 清空对话框中的数据
                 $("#formAdd")[0].reset();
+                $('#id_account_belong_id').empty();
 
                 // 设置对话框的标题
                 $("#myModalLabel").text("添加测试账号");
 
                 // 点击新建按钮，显示对话框。
                 $("#myModal").modal("show");
+
+                               $.ajax({
+                url: '/account/option/',
+                dataType: 'json',
+                type: 'get',
+                success: function (res) {
+                    console.log(res.data)
+                    if (res.status) {
+                        $.each(res.data, function (name, value) {
+                            console.log(name,value)
+                            var option = "<option value=\"" + value[0] + "\"";
+                            option += ">" + value[1] + "</option>"; //动态添加数据
+                            $('#id_account_belong_id').append(option);
+                        });
+                        $('#id_account_belong_id').val(valueOption);
+                    }
+                }
+            });
 
             });
         }
@@ -292,6 +319,7 @@
             $(".btn-edit").click(function () {
 
                 $('#formAdd')[0].reset();
+                $('#id_account_belong_id').empty();
 
                 var aid = $(this).attr('aid');
 
@@ -305,14 +333,18 @@
                         aid: aid
                     },
                     success: function (res) {
+
                         if (res.status) {
                             $.each(res.data, function (name, value) {
                                 $('#id_' + name).val(value);
+                                valueOption = res.data["account_belong_id"]
+
                             });
-                            console.log(res.data)
+
                             $('#myModalLabel').text("编辑");
 
                             $('#myModal').modal('show');
+
                         } else {
                             alert(res.error);
                         }
@@ -320,6 +352,24 @@
                     }
                 });
 
+
+               $.ajax({
+                url: '/account/option/',
+                dataType: 'json',
+                type: 'get',
+                success: function (res) {
+                    console.log(res.data)
+                    if (res.status) {
+                        $.each(res.data, function (name, value) {
+                            console.log(name,value)
+                            var option = "<option value=\"" + value[0] + "\"";
+                            option += ">" + value[1] + "</option>"; //动态添加数据
+                            $('#id_account_belong_id').append(option);
+                        });
+                        $('#id_account_belong_id').val(valueOption);
+                    }
+                }
+            });
             });
         }
 

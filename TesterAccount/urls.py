@@ -43,6 +43,7 @@ urlpatterns = [
     path('account/detail/', account.account_detail),
     path('account/add/', account.account_add),
     path('account/edit/', account.account_edit),
+    path('account/option/', account.account_option),
 
     # 测试账号操作
     path('operation/<int:aid>', operation.operation_list),

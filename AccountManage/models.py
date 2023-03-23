@@ -39,7 +39,7 @@ class TesterInfo(models.Model):
 
 
 class Account(models.Model):
-    account_belong = models.ForeignKey(verbose_name="测试账号归属", to="TesterInfo", on_delete=models.CASCADE)
+    account_belong = models.ForeignKey(verbose_name="测试账号归属", to="TesterInfo", blank=True, on_delete=models.CASCADE)
     # account_nick = models.CharField(max_length=64, verbose_name='测试账号昵称')
     account_uid = models.CharField(max_length=128, verbose_name="测试账号UID", null=True)
     account_YY = models.CharField(max_length=128, verbose_name="测试账号YY", null=True)

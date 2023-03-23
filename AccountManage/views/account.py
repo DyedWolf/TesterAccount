@@ -102,6 +102,7 @@ def account_delete(request):
 def account_add(request):
     """添加测试账号"""
     form = Account(data=request.POST)
+    print(request.POST)
     if form.is_valid():
         form.save()
         result = {"status": True}
@@ -116,7 +117,6 @@ def account_edit(request):
     aid = request.GET.get("aid")
     row_object = models.Account.objects.filter(id=aid).first()
     print(aid)
-    print(row_object)
     if not row_object:
         result = {"status": False, "tips": "编辑失败"}
         return JsonResponse(result)
@@ -124,7 +124,24 @@ def account_edit(request):
     form = Account(data=request.POST, instance=row_object)
     print(request.POST)
     if form.is_valid():
-        form.save()
+        # form.save()
+        # account_uid = request.POST.get("account_uid")
+        # account_YY = request.POST.get("account_YY")
+        # account_card = request.POST.get("account_card")
+        # print(type(account_card))
+        # account_belong = request.POST.get("account_belong")
+        # account_remarks = request.POST.get("account_remarks")
+        # account_pwd = request.POST.get("account_pwd")
+        # print(account_uid, account_YY, account_card, account_belong, account_remarks, account_pwd)
+        with connection.cursor() as cursor:
+            sql = "update accountmanage_account set account_uid='{}',account_YY='{}',account_card='{}',account_belong_id={},account_remarks='{}',account_pwd='{}' where id = {}".format(
+                request.POST.get("account_uid"), request.POST.get("account_YY"), request.POST.get("account_card"), request.POST.get("account_belong"), request.POST.get("account_remarks"), request.POST.get("account_pwd"), aid)
+            print(sql)
+            cursor.execute(sql)
+            sql_data = cursor.fetchall()  # 获取一条数据, 使用fetchone()
+            # colums = [col[0] for col in cursor.description]
+            # sql_data = [dict(zip(colums, row)) for row in sql_data]
+        print(sql_data)
         result = {"status": True}
         return JsonResponse(result)
 
@@ -133,14 +150,16 @@ def account_edit(request):
 
 
 def account_detail(request):
-    """编辑测试账号"""
+    """测试账号详情"""
     aid = request.GET.get('aid')
     # print(aid)
     data_dict = models.Account.objects.filter(id=aid).values("account_YY", "account_card", "account_uid",
-                                                             "account_belong_id", "account_pwd", "account_remarks").first()
+                                                             "account_belong_id", "account_pwd",
+                                                             "account_remarks").first()
     if not data_dict:
         result = {"status": False, "error": "未知错误"}
         return JsonResponse(result)
+    print(data_dict)
     result = {"status": True, "data": data_dict}
     # print(data_dict)
     return JsonResponse(result)
@@ -148,6 +167,18 @@ def account_detail(request):
 
 def account_operation(request):
     return render(request, "operation_list.html")
+
+
+def account_option(request):
+    with connection.cursor() as cursor:
+        sql = "select id,tester_name from accountmanage_testerinfo"
+        cursor.execute(sql)
+        sql_data = cursor.fetchall()  # 获取一条数据, 使用fetchone()
+        # colums = [col[0] for col in cursor.description]
+        # sql_data = [dict(zip(colums, row)) for row in sql_data]
+    print(sql_data)
+    result = {"status": True, "data": sql_data}
+    return JsonResponse(result)
 
 
 @csrf_exempt

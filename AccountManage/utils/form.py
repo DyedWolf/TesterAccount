@@ -50,7 +50,8 @@ class Account(BootStrapModelForm):
 
     class Meta:
         model = models.Account
-        fields = "__all__"
+        # fields = "__all__"
+        exclude = ["account_belong"]
 
 
 class Upload(BootStrapModelForm):
