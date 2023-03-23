@@ -3,7 +3,7 @@ from openpyxl import load_workbook
 
 from django.db import connection
 from django.shortcuts import render, HttpResponse, redirect
-from django.http.response import JsonResponse
+from django.http.response import JsonResponse, FileResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from AccountManage import models
@@ -117,6 +117,7 @@ def account_edit(request):
     aid = request.GET.get("aid")
     row_object = models.Account.objects.filter(id=aid).first()
     print(aid)
+    print(row_object)
     if not row_object:
         result = {"status": False, "tips": "编辑失败"}
         return JsonResponse(result)
@@ -212,3 +213,13 @@ def cal(request):
 def index(request):
     if request.method == "GET":
         return render(request, "index.html")
+
+
+@csrf_exempt
+def download_excel(request):
+    """ 下载模板 """
+    file_path = r"AccountManage/static/excel/demo.xlsx"
+    f = open(file_path, "rb")
+    r = FileResponse(f, as_attachment=True, filename="demo.xlsx")
+    return r
+

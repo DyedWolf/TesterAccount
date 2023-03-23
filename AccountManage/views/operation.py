@@ -187,6 +187,7 @@ def reset_sign_log(request):
         "uid": uid
     }
     res = requests.get(url=url, params=data)
+    print(res)
     print(res.url)
     print(json.loads(res.content))
     if json.loads(res.content)["result"] == 0:
