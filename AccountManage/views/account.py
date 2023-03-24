@@ -104,7 +104,16 @@ def account_add(request):
     form = Account(data=request.POST)
     print(request.POST)
     if form.is_valid():
-        form.save()
+        # form.save()
+        with connection.cursor() as cursor:
+            sql = "insert into accountmanage_account (account_uid,account_YY,account_card,account_belong_id,account_remarks,account_pwd) values ({},{},'{}',{},'{}','{}')".format(
+                request.POST.get("account_uid"), request.POST.get("account_YY"), request.POST.get("account_card"), request.POST.get("account_belong"), request.POST.get("account_remarks"), request.POST.get("account_pwd"))
+            print(sql)
+            cursor.execute(sql)
+            sql_data = cursor.fetchall()  # 获取一条数据, 使用fetchone()
+            # colums = [col[0] for col in cursor.description]
+            # sql_data = [dict(zip(colums, row)) for row in sql_data]
+        print(sql_data)
         result = {"status": True}
         return JsonResponse(result)
     result = {"status": False, "error": form.errors}

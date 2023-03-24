@@ -6,7 +6,7 @@ import re, requests, json
 #     x = x + i
 # print(x)
 
-url = "https://yomi1.yy.com/zhuiya_recommend/v2/get_recommend_info?id=32100&next=0"
+url = "https://yomi1-test.yy.com/zhuiya_recommend/v2/get_recommend_info?id=30000&next=0"
 headers = {
     "x-fts-platform": "4"
 }
@@ -27,3 +27,4 @@ for i, cleanData in enumerate(data["list"]):
     if data["list"][i]["gameType"] == 2:
         sid_data["tuanzhan"].append((data["list"][i]["sid"], data["list"][i]["ssid"]))
 print("相亲房数量：{}，团战房数量：{}，乱斗房数量：{}".format(len(sid_data["xiangqin"]), len(sid_data["tuanzhan"]), len(sid_data["luandou"])))
+print(sid_data["xiangqin"])

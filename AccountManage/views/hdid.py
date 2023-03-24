@@ -30,8 +30,7 @@ def hdid_list(request):
 
 @csrf_exempt
 def hdid_add(request):
-    # form = HDID(data)
-
+    """ 添加设备信息 """
     data = request.POST.copy()
     if not data["remark"]:
         data["remark"] = "/"
