@@ -1,0 +1,96 @@
+{% extends 'layout.html' %}
+
+
+{% block css %}
+
+{% endblock %}
+
+
+{% block content %}
+<div class="container" style="width: 1000px">
+           <!--添加厅的推荐图和标题-->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">添加厅的推荐图和标题</h3>
+            </div>
+            <div class="panel-body">
+                <form method="post" novalidate="">
+                    <div class="form-group">
+                        <label>推荐标题 : 乌鸦坐飞机~</label>
+                    </div>
+                    <div class="form-group">
+                        <label>推荐封面 : </label>
+                        <img style="width: 100px;" src="/static/img/640.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label>需要推荐的sid : </label>
+                        <input type="text" class="form-control" name="sid" id="id_sid"{{ sid }} placeholder="暂时没做数据校验和异常处理，自己检查sid和ssid哦"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>需要推荐的ssid：</label>
+                        <input type="text" class="form-control" name="ssid" id="id_ssid" placeholder="暂时没做数据校验和异常处理，自己检查sid和ssid哦"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>需要推荐的业务 : </label>
+                        <select name="businessType" class="form-control" required="" id="id_businessType">
+                            <option value="1">交友房</option>
+                            <option value="2">约战房</option>
+                            <option value="3">宝贝房</option>
+                            <option value="501">技能卡房</option>
+                        </select>
+                    </div>
+
+                    <button type="button" id="btnAddRecommendRoom" class="btn btn-primary">确认</button>
+                </form>
+            </div>
+        </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block js %}
+    <script type="text/javascript">
+
+        $(function () {
+            bindBtnAddRecommendRoom();
+        });
+
+        function bindBtnAddRecommendRoom() {
+            $("#btnAddRecommendRoom").click(function () {
+                $.ajax({
+                    url: "/operation/add_recommend_room/",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        sid: $('#id_sid').val(),
+                        ssid: $('#id_ssid').val(),
+                        businessType: $("#id_businessType").val(),
+                    },
+                    success: function (res) {
+                        if (res.status) {
+                            alert("添加成功");
+                        }
+                        if (res.status === false) {
+                            alert(res.error);
+                        }
+                    }
+                });
+            });
+        }
+    </script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+

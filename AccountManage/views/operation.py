@@ -1,4 +1,4 @@
-import requests, json
+import requests, json, pymongo
 
 from django.db import connection
 from django.shortcuts import HttpResponse, render, redirect
@@ -20,7 +20,7 @@ def operation_list(request, aid):
     return render(request, "operation_list.html", result_data)
 
 
-cookie = "yyuid=50047479; username=dw_wangchengqing; password=8604A3C15FA33B00A1AEC4D64CFDF4914743DBC7; udb_oar=5DFAC147B694082E30A0EF3EEB69DEFA469B51F011D701E4FE61E4B55E24CAC6F199A2719CC081E5A23F92D2C6BE80EBD710C7694343FA320E8A74BA465F4BA0160604727378E5EFB37FE2C15F71FEED66E1CF51CA583EA6A1FAC0C398D7E59E10C6032C67257E8E7A8A940A9C484E05E5CC74F8ACF6268F3EE90E34DE95C3552008A2C8299537509C4C54EE725B71A5B67EE8D5C2EA0700F21FDC58873ECD5C61A8494D3D8E6944B72DB079DA89C66F52D7F9A49915CA356B8316A90C8655D311F797CD4ED5676DFC3636A4E7DD79AB8FF6B978E12C21894295F171332561D18C8AFC9A71E40452B2C76F9BD852EE81DD22FB00C36B276A4867CE566CDA8FED53304B5431B2589C63AF27AB5AFD1BD52B50BD8C0C57BDEF6ADA290646EF9D24EF385157361797E36AA07D982856D88B465BEA02157B745A6BCA0213DE5E447981D97EAA512AB3FA3EA26A1BD4F1057C3B0C0A4F9FF1470110EA6F390D4DFE35B448DCD2F1E5E76FAD96A469FDC25962FBAD123FCBC0A7DC7289A5A887775A1C"
+cookie = "udb_c=; hd_newui=0.9862089992719061; hiido_ui=0.7456936830136831; osinfo=3E530F41DA01E8A3D22EB4880B3B1021E0607174; ab_sr=1.0.1_OTQxNjFhYWU1MGY3MGZmMmQzMTg4NzVkZjg0ZGM1OTlmYzhmOWFiYTgyZmQ5ZTRkNmRkNTU2N2Y3MzlmN2Y5M2U4MWEyYzVjM2M5OGI3ZWY1ZWM0OTI2NGVkYmU0OGJkODUwZGQwZWM4M2E5YTlkZmRhYTA0NTRlNWVlNDZmNzM0YzUwZTY0MGFmN2VlZTRhYjY0YjFjZDlmMTI5ZTcxMg==; yyuid=50047479; username=dw_wangchengqing; password=17BDE1FD368AB0B164FA5BF0EA297B85EE4C0324; udb_oar=1651F9D2DEE56EFAC2024C862CA921EF6EE209F766907F5880E48C065BBCC2CD0BFE86B49A7331BEEEF4689B773F197312525472F9350A8B6C6668F6CFD9F96E2B38162CF31133A611F9EE46850B7C8F7C724CEF2A7DCF0A79A90DAC195DB47AE4F779E41CC7932F55E8B851A0D6B03F21E1C4D3458E365CDCF7634DB8517CBB023ECE983833533BE982628432A6945ADED091C6FE1219F5C691CAB0F6BC8444815719B45AAF351498807A36990647C32F7E4CFECECE85CDAABC061392B4E7A068F9FDBC8A0CA14C8710042380F44C53C6FC3DE9E01003E345F1E655D25AA06D88459567FB83DAF29DDFBB44535522CC7F5551889C96DFC232160CA228A3FAA4400C5AB907CC1C20E959603CB45A462AA5B1F57122D28FCB5F92C1B40002E2097C0929E370F146A5BE00689848DC2CE743428B8FA7CFA916D1EA7235A09823EB026F49F655FEE2F1ACAD3085D499E6C81AF160A2FEBB4164F5A1713A760B66B4B24566E77A5078E4231A80A28640FB14E12815D6886616CED9223BDC7226EA7D"
 
 
 @csrf_exempt
@@ -49,7 +49,8 @@ def operation_new_account(request):
         res = requests.get(url=url, headers=header, params=param)
         print(res.url)
         print(json.loads(res.content))
-        return JsonResponse(json.loads(res.content))
+        if res.content:
+            return JsonResponse(json.loads(res.content))
     result = {"status": False, "error": "hdid不能为空"}
     return JsonResponse(result)
 
@@ -193,3 +194,114 @@ def reset_sign_log(request):
     if json.loads(res.content)["result"] == 0:
         return JsonResponse(json.loads(res.content))
     return JsonResponse(json.loads(res.content))
+
+
+@csrf_exempt
+def add_recommend_room(request):
+    client = pymongo.MongoClient(host='125.94.237.198', port=19999)
+    mydb = client["fts_zhuiya_recommend_v2"]
+    mycol = mydb["recommend_sid_picture_list"]
+
+    sid = int(request.POST.get("sid"))
+    ssid = int(request.POST.get("ssid"))
+    businessType = int(request.POST.get("businessType"))
+
+    if sid and ssid and businessType:
+        results = mycol.find({"sid": sid, "ssid": ssid})
+        exitData = []
+        for result in results:
+            # print(result)
+            exitData.append(result["_id"])
+        addData = str(sid) + "_" + str(ssid) + "_" + str(businessType)
+        print(exitData, addData)
+        if addData not in exitData:
+            print("插入数据")
+            data = {"_id": "{}_{}_{}".format(sid, ssid, businessType),
+                    "businessType": businessType,
+                    "sid": sid,
+                    "ssid": ssid,
+                    "takeEffect": 0,
+                    "takeTitleEffect": 0,
+                    "featurePictureList": [
+
+                    ],
+                    "currentFeaturePicture": "",
+                    "uptime": 1679625475,
+                    "subTag": "",
+                    "labels": [
+
+                    ],
+                    "rating": "",
+                    "picture": "https://makefriends.bs2dl.yy.com/1679625466_8974eefad506b9a17b4a32c5885a3b38.jpg",
+                    "pictureStatus": 2,
+                    "pictureReason": "\u5185\u5ba1:2023.03.24 10:38",
+                    "title": "\u4e4c\u9e26\u5750\u98de\u673a~",
+                    "titleStatus": 2,
+                    "titleReason": "",
+                    "picture45": "",
+                    "pictureStatus45": 0,
+                    "pictureReason45": "",
+                    "picture169": "",
+                    "pictureStatus169": 0,
+                    "pictureReason169": "",
+                    "textTip": "",
+                    "textTipStatus": 0,
+                    "textTipReason": "",
+                    "uploadPicture1110": "",
+                    "uploadStatus1110": 0,
+                    "uploadReason1110": "",
+                    "uploadTime1110": 0,
+                    "contentLabel": ""}
+            result = mycol.insert_one(data)
+            print(result.acknowledged)
+            response = {"status": True}
+            client.close()
+            return JsonResponse(response)
+        if addData in exitData:
+            data = {"_id": "{}_{}_{}".format(sid, ssid, businessType),
+                    "businessType": businessType,
+                    "sid": sid,
+                    "ssid": ssid,
+                    "takeEffect": 0,
+                    "takeTitleEffect": 0,
+                    "featurePictureList": [
+
+                    ],
+                    "currentFeaturePicture": "",
+                    "uptime": 1679625475,
+                    "subTag": "",
+                    "labels": [
+
+                    ],
+                    "rating": "",
+                    "picture": "https://makefriends.bs2dl.yy.com/1679625466_8974eefad506b9a17b4a32c5885a3b38.jpg",
+                    "pictureStatus": 2,
+                    "pictureReason": "\u5185\u5ba1:2023.03.24 10:38",
+                    "title": "\u4e4c\u9e26\u5750\u98de\u673a~",
+                    "titleStatus": 2,
+                    "titleReason": "",
+                    "picture45": "",
+                    "pictureStatus45": 0,
+                    "pictureReason45": "",
+                    "picture169": "",
+                    "pictureStatus169": 0,
+                    "pictureReason169": "",
+                    "textTip": "",
+                    "textTipStatus": 0,
+                    "textTipReason": "",
+                    "uploadPicture1110": "",
+                    "uploadStatus1110": 0,
+                    "uploadReason1110": "",
+                    "uploadTime1110": 0,
+                    "contentLabel": ""}
+            print("更新数据")
+            updateDate = mycol.find_one({"_id": addData})
+            result = mycol.update_one(data, updateDate)
+            print(result.acknowledged)
+            response = {"status": True}
+            client.close()
+            return JsonResponse(response)
+
+    client.close()
+    response = {"status": False, "error": "未知错误！"}
+    return JsonResponse(response)
