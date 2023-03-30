@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'AccountManage.apps.AccountmanageConfig',
+    'Friday.apps.FridayConfig',
 ]
 
 MIDDLEWARE = [

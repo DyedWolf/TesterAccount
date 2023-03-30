@@ -113,7 +113,7 @@ def add_recommend_room(request):
                 "uploadReason1110": "",
                 "uploadTime1110": 0,
                 "contentLabel": ""}
-
+            print("更新数据")
             result = mycol.update_one({"_id": "{}".format(addId)}, {"$set": allData})
             print(result.acknowledged)
             if result.acknowledged:

@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from AccountManage.views import tester, login, account, operation, hdid, information, recommend
+from Friday.views import friday
+
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
