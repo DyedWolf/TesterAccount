@@ -55,7 +55,7 @@ urlpatterns = [
     path('operation/reset_sign_log/', operation.reset_sign_log),
 
     path('recommend/list/', recommend.recommend_list),
-    path('operation/add_recommend_room/', operation.add_recommend_room),
+    path('recommend/add_recommend_room/', recommend.add_recommend_room),
 
     # 测试机HDID
     path('hdid/list/', hdid.hdid_list),

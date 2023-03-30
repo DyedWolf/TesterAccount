@@ -14,21 +14,16 @@ mycol = mydb["recommend_sid_picture_list"]
 # db = client.mydb
 # print(db)
 exitData = []
-results = mycol.find({"sid": 1451119354, "ssid": 2798359950})  # .find_one({"sid": 1451119354, "ssid": 2798359950})
+results = mycol.find({"sid": 87814665, "ssid": 2805640284})  # .find_one({"sid": 1451119354, "ssid": 2798359950})
 for result in results:
     exitData.append(result["_id"])
+    print(result)
 print(exitData)
 
 "1355632767_2814984951_1"
-updateDate = mycol.find_one({"_id": "1451119354_2791669992_1"})
-print(updateDate)
-portData = {'_id': '1451119354_2791669992_1', 'businessType': 1, 'sid': 1451119354, 'ssid': 2791669992, 'takeEffect': 0,
-            'takeTitleEffect': 0, 'featurePictureList': [], 'currentFeaturePicture': '', 'uptime': 1634631645,
-            'subTag': '相亲', 'labels': [], 'rating': 'S', 'picture': '', 'pictureStatus': 0, 'pictureReason': '',
-            'title': 'PC进场来源测试', 'titleStatus': 2, 'titleReason': '', 'picture45': '', 'pictureStatus45': 0,
-            'pictureReason45': '', 'picture169': '', 'pictureStatus169': 0, 'pictureReason169': '', 'textTip': '进场来源',
-            'textTipStatus': 2, 'textTipReason': '', 'uploadPicture1110': '', 'uploadStatus1110': 0,
-            'uploadReason1110': '', 'uploadTime1110': 0}
+addId = "1451119354_2791669992_1"
+updateDate = mycol.find_one({"_id": addId})
+
 allData = {
     "takeEffect": 0,
     "takeTitleEffect": 0,

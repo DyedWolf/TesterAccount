@@ -21,6 +21,7 @@ def add_recommend_room(request):
     sid = int(request.POST.get("sid"))
     ssid = int(request.POST.get("ssid"))
     businessType = int(request.POST.get("businessType"))
+    addId = str(sid) + "_" + str(ssid) + "_" + str(businessType)
 
     if sid and ssid and businessType:
         results = mycol.find({"sid": sid, "ssid": ssid})
@@ -28,9 +29,9 @@ def add_recommend_room(request):
         for result in results:
             # print(result)
             exitData.append(result["_id"])
-        addData = str(sid) + "_" + str(ssid) + "_" + str(businessType)
-        print(exitData, addData)
-        if addData not in exitData:
+        print(exitData, addId)
+
+        if addId not in exitData:
             print("插入数据")
             data = {"_id": "{}_{}_{}".format(sid, ssid, businessType),
                     "businessType": businessType,
@@ -70,11 +71,16 @@ def add_recommend_room(request):
                     "contentLabel": ""}
             result = mycol.insert_one(data)
             print(result.acknowledged)
-            response = {"status": True}
-            client.close()
-            return JsonResponse(response)
-        if addData in exitData:
-            data = {
+            if result.acknowledged:
+                response = {"status": True}
+                client.close()
+                return JsonResponse(response)
+        if addId in exitData:
+            allData = {
+                "_id": "{}_{}_{}".format(sid, ssid, businessType),
+                "businessType": businessType,
+                "sid": sid,
+                "ssid": ssid,
                 "takeEffect": 0,
                 "takeTitleEffect": 0,
                 "featurePictureList": [
@@ -107,14 +113,13 @@ def add_recommend_room(request):
                 "uploadReason1110": "",
                 "uploadTime1110": 0,
                 "contentLabel": ""}
-            print("更新数据")
-            updateDate = mycol.find_one({"_id": addData})
-            print(updateDate)
-            result = mycol.update_one({"_id": addData}, {"$set": data})
+
+            result = mycol.update_one({"_id": "{}".format(addId)}, {"$set": allData})
             print(result.acknowledged)
-            response = {"status": True}
-            client.close()
-            return JsonResponse(response)
+            if result.acknowledged:
+                response = {"status": True}
+                client.close()
+                return JsonResponse(response)
 
     client.close()
     response = {"status": False, "error": "未知错误！"}
