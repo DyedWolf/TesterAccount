@@ -74,46 +74,43 @@ def add_recommend_room(request):
             client.close()
             return JsonResponse(response)
         if addData in exitData:
-            data = {"_id": "{}_{}_{}".format(sid, ssid, businessType),
-                    "businessType": businessType,
-                    "sid": sid,
-                    "ssid": ssid,
-                    "takeEffect": 0,
-                    "takeTitleEffect": 0,
-                    "featurePictureList": [
+            data = {
+                "takeEffect": 0,
+                "takeTitleEffect": 0,
+                "featurePictureList": [
 
-                    ],
-                    "currentFeaturePicture": "",
-                    "uptime": 1679625475,
-                    "subTag": "",
-                    "labels": [
+                ],
+                "currentFeaturePicture": "",
+                "uptime": 1679625475,
+                "subTag": "",
+                "labels": [
 
-                    ],
-                    "rating": "",
-                    "picture": "https://makefriends.bs2dl.yy.com/1679625466_8974eefad506b9a17b4a32c5885a3b38.jpg",
-                    "pictureStatus": 2,
-                    "pictureReason": "\u5185\u5ba1:2023.03.24 10:38",
-                    "title": "\u4e4c\u9e26\u5750\u98de\u673a~",
-                    "titleStatus": 2,
-                    "titleReason": "",
-                    "picture45": "",
-                    "pictureStatus45": 0,
-                    "pictureReason45": "",
-                    "picture169": "",
-                    "pictureStatus169": 0,
-                    "pictureReason169": "",
-                    "textTip": "",
-                    "textTipStatus": 0,
-                    "textTipReason": "",
-                    "uploadPicture1110": "",
-                    "uploadStatus1110": 0,
-                    "uploadReason1110": "",
-                    "uploadTime1110": 0,
-                    "contentLabel": ""}
+                ],
+                "rating": "",
+                "picture": "https://makefriends.bs2dl.yy.com/1679625466_8974eefad506b9a17b4a32c5885a3b38.jpg",
+                "pictureStatus": 2,
+                "pictureReason": "\u5185\u5ba1:2023.03.24 10:38",
+                "title": "\u4e4c\u9e26\u5750\u98de\u673a~",
+                "titleStatus": 2,
+                "titleReason": "",
+                "picture45": "",
+                "pictureStatus45": 0,
+                "pictureReason45": "",
+                "picture169": "",
+                "pictureStatus169": 0,
+                "pictureReason169": "",
+                "textTip": "",
+                "textTipStatus": 0,
+                "textTipReason": "",
+                "uploadPicture1110": "",
+                "uploadStatus1110": 0,
+                "uploadReason1110": "",
+                "uploadTime1110": 0,
+                "contentLabel": ""}
             print("更新数据")
             updateDate = mycol.find_one({"_id": addData})
             print(updateDate)
-            result = mycol.update_one(data, updateDate)
+            result = mycol.update_one({"_id": addData}, {"$set": data})
             print(result.acknowledged)
             response = {"status": True}
             client.close()

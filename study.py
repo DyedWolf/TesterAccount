@@ -20,41 +20,48 @@ for result in results:
 print(exitData)
 
 "1355632767_2814984951_1"
-updateDate = mycol.find_one({"_id": "1451119354_2798359950_1"})
+updateDate = mycol.find_one({"_id": "1451119354_2791669992_1"})
 print(updateDate)
-data = {
-        "takeEffect": 0,
-        "takeTitleEffect": 0,
-        "featurePictureList": [
+portData = {'_id': '1451119354_2791669992_1', 'businessType': 1, 'sid': 1451119354, 'ssid': 2791669992, 'takeEffect': 0,
+            'takeTitleEffect': 0, 'featurePictureList': [], 'currentFeaturePicture': '', 'uptime': 1634631645,
+            'subTag': '相亲', 'labels': [], 'rating': 'S', 'picture': '', 'pictureStatus': 0, 'pictureReason': '',
+            'title': 'PC进场来源测试', 'titleStatus': 2, 'titleReason': '', 'picture45': '', 'pictureStatus45': 0,
+            'pictureReason45': '', 'picture169': '', 'pictureStatus169': 0, 'pictureReason169': '', 'textTip': '进场来源',
+            'textTipStatus': 2, 'textTipReason': '', 'uploadPicture1110': '', 'uploadStatus1110': 0,
+            'uploadReason1110': '', 'uploadTime1110': 0}
+allData = {
+    "takeEffect": 0,
+    "takeTitleEffect": 0,
+    "featurePictureList": [
 
-        ],
-        "currentFeaturePicture": "",
-        "uptime": 1679625475,
-        "subTag": "",
-        "labels": [
+    ],
+    "currentFeaturePicture": "",
+    "uptime": 1679625475,
+    "subTag": "",
+    "labels": [
 
-        ],
-        "rating": "",
-        "picture": "https://makefriends.bs2dl.yy.com/1679625466_8974eefad506b9a17b4a32c5885a3b38.jpg",
-        "pictureStatus": 2,
-        "pictureReason": "\u5185\u5ba1:2023.03.24 10:38",
-        "title": "\u4e4c\u9e26\u5750\u98de\u673a~",
-        "titleStatus": 2,
-        "titleReason": "",
-        "picture45": "",
-        "pictureStatus45": 0,
-        "pictureReason45": "",
-        "picture169": "",
-        "pictureStatus169": 0,
-        "pictureReason169": "",
-        "textTip": "",
-        "textTipStatus": 0,
-        "textTipReason": "",
-        "uploadPicture1110": "",
-        "uploadStatus1110": 0,
-        "uploadReason1110": "",
-        "uploadTime1110": 0,
-        "contentLabel": ""}
-# result = mycol.insert_one(data)
-result = mycol.update_one(data, updateDate)
+    ],
+    "rating": "",
+    "picture": "https://makefriends.bs2dl.yy.com/1679625466_8974eefad506b9a17b4a32c5885a3b38.jpg",
+    "pictureStatus": 2,
+    "pictureReason": "\u5185\u5ba1:2023.03.24 10:38",
+    "title": "\u4e4c\u9e26\u5750\u98de\u673a~",
+    "titleStatus": 2,
+    "titleReason": "",
+    "picture45": "",
+    "pictureStatus45": 0,
+    "pictureReason45": "",
+    "picture169": "",
+    "pictureStatus169": 0,
+    "pictureReason169": "",
+    "textTip": "",
+    "textTipStatus": 0,
+    "textTipReason": "",
+    "uploadPicture1110": "",
+    "uploadStatus1110": 0,
+    "uploadReason1110": "",
+    "uploadTime1110": 0,
+    "contentLabel": ""}
+# result = mycol.insert_one(portData)
+result = mycol.update_one({"_id": "1451119354_2791669992_1"}, {"$set": allData})
 print(result.acknowledged)
