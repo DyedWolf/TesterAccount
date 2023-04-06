@@ -144,13 +144,36 @@ def add_recommend_uid(request):
     print(exitData, addId)
 
     allData = {
-        'businessType': businessType, 'compereUID': uid, 'takeEffect': 0, 'takeTitleEffect': 0,
-        'featurePictureList': [], 'currentFeaturePicture': '', 'uptime': 1662106386, 'subTag': '', 'labels': [],
-        'rating': '', 'picture': 'https://makefriends.bs2dl.yy.com/1662106385_84d5c31e95e671b73ad3be0599c2d09b.JPG',
-        'pictureStatus': 2, 'pictureReason': '内审:2022.09.02 16:13', 'title': '没想到吧~', 'titleStatus': 2,
-        'titleReason': '', 'picture45': '', 'pictureStatus45': 0, 'pictureReason45': '', 'picture169': '',
-        'pictureStatus169': 0, 'pictureReason169': '', 'textTip': '', 'textTipStatus': 0, 'textTipReason': '',
-        'uploadPicture1110': '', 'uploadStatus1110': 0, 'uploadReason1110': '', 'uploadTime1110': 0, 'contentLabel': ''
+        'businessType': businessType,
+        'compereUID': uid,
+        'takeEffect': 0,
+        'takeTitleEffect': 0,
+        'featurePictureList': [],
+        'currentFeaturePicture': '',
+        'uptime': 1662106386,
+        'subTag': '',
+        'labels': [],
+        'rating': '',
+        'picture': 'https://makefriends.bs2dl.yy.com/1662106385_84d5c31e95e671b73ad3be0599c2d09b.JPG',
+        'pictureStatus': 2,
+        'pictureReason': '内审:2022.09.02 16:13',
+        'title': '没想到吧~',
+        'titleStatus': 2,
+        'titleReason': '',
+        'picture45': '',
+        'pictureStatus45': 0,
+        'pictureReason45': '',
+        'picture169': '',
+        'pictureStatus169': 0,
+        'pictureReason169': '',
+        'textTip': '',
+        'textTipStatus': 0,
+        'textTipReason': '',
+        'uploadPicture1110': '',
+        'uploadStatus1110': 0,
+        'uploadReason1110': '',
+        'uploadTime1110': 0,
+        'contentLabel': ''
     }
     print("更新数据")
     result = mycol.update_one({"_id": "{}".format(addId)}, {"$set": allData}, upsert=True)
