@@ -56,8 +56,10 @@ urlpatterns = [
     path('operation/reset_noble/', operation.reset_noble),
     path('operation/reset_sign_log/', operation.reset_sign_log),
 
+    # 添加推荐uid和sid
     path('recommend/list/', recommend.recommend_list),
     path('recommend/add_recommend_room/', recommend.add_recommend_room),
+    path('recommend/add_recommend_uid/', recommend.add_recommend_uid),
 
     # 测试机HDID
     path('hdid/list/', hdid.hdid_list),
