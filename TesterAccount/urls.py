@@ -55,6 +55,7 @@ urlpatterns = [
     path('operation/search_balance/', operation.search_balance),
     path('operation/reset_noble/', operation.reset_noble),
     path('operation/reset_sign_log/', operation.reset_sign_log),
+    path('operation/add_all_balance/', operation.add_all_balance),
 
     # 添加推荐uid和sid
     path('recommend/list/', recommend.recommend_list),

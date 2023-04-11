@@ -67,7 +67,9 @@ def account_multi(request):
         form = Upload()
         return render(request, "account_upload.html", {"form": form})
     account_belong_id = request.POST.get('account_belong')
-    file_object = request.FILES.get("excel")
+    print(account_belong_id)
+    file_object = request.FILES.get("exc")
+    print(file_object)
     wb = load_workbook(file_object)
     sheet = wb.worksheets[0]
     for row in sheet.iter_rows(min_row=2):

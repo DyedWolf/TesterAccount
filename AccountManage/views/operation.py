@@ -196,5 +196,40 @@ def reset_sign_log(request):
     return JsonResponse(json.loads(res.content))
 
 
+@csrf_exempt
+def add_all_balance(request):
+    account_belong_id = request.POST.get("account_belong_id")
+    all_qute = request.POST.get("allQute")
+    all_coin = request.POST.get("allCoin")
+    print(account_belong_id, all_qute, all_coin)
+    with connection.cursor() as cursor:
+        sql = "SELECT `accountmanage_account`.`account_uid` FROM `accountmanage_account` WHERE account_belong_id = '{}' ".format(
+            account_belong_id)
 
+        # print(sql)
+        cursor.execute(sql)
+        sql_data = cursor.fetchall()  # 获取一条数据, 使用fetchone()
+        # print(sql_data)
+        uids = ""
+        for value in sql_data:
+            uids += value[0] + ","
+        print(uids)
 
+        url = "http://turnover-bg-test.yy.com/batchAddCurrency"
+        data = {
+            "uids": uids,
+            "amount": all_qute,
+            "description": "test",
+            "currencyType": 1,
+            "appid": 2,
+            "countryCode": "cn"
+        }
+        res = requests.get(url=url, params=data)
+        print(res.text)
+        print(res.status_code)
+        if res.status_code == 200:
+            result = {"status": True, "res": json.loads(res.text)}
+            return JsonResponse(result)
+
+        result = {"status": False, "res": res.text}
+        return JsonResponse(result)

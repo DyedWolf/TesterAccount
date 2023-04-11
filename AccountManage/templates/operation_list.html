@@ -149,44 +149,6 @@
             </div>
         </div>
 
-{#        <!--添加厅的推荐图和标题-->#}
-{#        <div class="panel panel-default">#}
-{#            <div class="panel-heading">#}
-{#                <h3 class="panel-title">添加厅的推荐图和标题</h3>#}
-{#            </div>#}
-{#            <div class="panel-body">#}
-{#                <form method="post" novalidate="">#}
-{#                    <div class="form-group">#}
-{#                        <label>推荐标题 : 乌鸦坐飞机~</label>#}
-{#                    </div>#}
-{#                    <div class="form-group">#}
-{#                        <label>推荐封面 : </label>#}
-{#                        <img style="width: 100px;" src="/static/img/640.jpg">#}
-{#                    </div>#}
-{#                    <div class="form-group">#}
-{#                        <label>需要推荐的sid : </label>#}
-{#                        <input type="text" class="form-control" name="sid" id="id_sid"{{ sid }} placeholder="没有做啥异常处理，自己检查sid和ssid哦"/>#}
-{#                    </div>#}
-{##}
-{#                    <div class="form-group">#}
-{#                        <label>需要推荐的ssid：</label>#}
-{#                        <input type="text" class="form-control" name="ssid" id="id_ssid" placeholder="没有做啥异常处理，自己检查sid和ssid哦"/>#}
-{#                    </div>#}
-{##}
-{#                    <div class="form-group">#}
-{#                        <label>需要推荐的业务 : </label>#}
-{#                        <select name="businessType" class="form-control" required="" id="id_businessType">#}
-{#                            <option value="1">交友房</option>#}
-{#                            <option value="2">约战房</option>#}
-{#                            <option value="3">宝贝房</option>#}
-{#                            <option value="501">技能卡房</option>#}
-{#                        </select>#}
-{#                    </div>#}
-{##}
-{#                    <button type="button" id="btnAddRecommendRoom" class="btn btn-primary">确认</button>#}
-{#                </form>#}
-{#            </div>#}
-{#        </div>#}
 
         <!--重置超神贵族等级-->
         <div class="panel panel-default">
@@ -206,16 +168,41 @@
             </div>
         </div>
 
-
+        <!--批量给uid添加货币-->
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">optionTest</h3>
+                <h3 class="panel-title">批量给uid添加货币</h3>
             </div>
-            <div class="panel-body">
-                <select name="optionTest" class="form-control" required="" id="optionTest">
 
-                </select>
+            <div class="panel-body">
+                <form method="post" novalidate="">
+                    <div class="form-group">
+                        <label>批量添加谁的账号 : </label>
+                        <select name="accountBelongId" class="form-control" required="" id="accountBelongId">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>充值额度 : </label>
+                        <input type="text" class="form-control" value="" placeholder="充值额度" required="" id="allQute">
+                    </div>
+                    <div class="form-group">
+                        <label>充值的币种 : </label>
+                        <select name="allCoin" class="form-control" required="" id="allCoin">
+                            {#                            <option value="1">Y币</option>#}
+                            {#                            <option value="2">紫水晶</option>#}
+                            {#                            <option value="34">金钻</option>#}
+                            {#                            <option value="36">红贝</option>#}
+                            {#                            <option value="58">ya币</option>#}
+                            <option value="2">紫水晶</option>
+                        </select>
+                    </div>
+
+                    <button type="button" id="btnAddAllBalance" class="btn btn-primary">确认</button>
+                    <h6 style="color: red" id="tips">确认后，属于自己的账号全部添加对应货币</h6>
+                    <div></div>
+                </form>
             </div>
+
         </div>
     </div>
 
@@ -234,6 +221,7 @@
             bindBtnResetNoble();
             bindBtnResetSignLog();
             binBtnOptionTest();
+            bindBtnAddAllBalance();
         });
 
         function binBtnOptionTest() {
@@ -247,9 +235,9 @@
                         $.each(res.data, function (name, value) {
                             var option = "<option value=\"" + value[0] + "\"";
                             option += ">" + value[1] + "</option>"; //动态添加数据
-                            $('#optionTest').append(option);
+                            $('#accountBelongId').append(option);
                         });
-                        $('#optionTest').val(3);
+                        $('#accountBelongId').val(10);
                     }
                 }
             });
@@ -375,6 +363,35 @@
                             alert(res.error)
                         }
                     }
+                });
+            });
+        }
+
+        function bindBtnAddAllBalance() {
+            $('#btnAddAllBalance').click(function () {
+
+                $("#tips").next().empty();
+
+                $.ajax({
+                    url: "/operation/add_all_balance/",
+                    dataType: "json",
+                    type: "post",
+                    data: {
+                        allQute: $("#allQute").val(),
+                        account_belong_id: $("#accountBelongId").val(),
+                        allCoin: $("#allCoin").val()
+                    },
+                    success: function (res) {
+                        console.log(res["res"]["msg"])
+                        if (res.status) {
+                            alert("添加成功");
+                            $("#tips").next().append(res["res"]["msg"])
+                        } else {
+                            alert(res["res"]["msg"])
+                        }
+
+                    }
+
                 });
             });
         }
