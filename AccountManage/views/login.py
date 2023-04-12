@@ -27,7 +27,10 @@ def login(request):
             return render(request, "login.html", {"form": form})
         request.session["info"] = {"id": tester_object.id, "name": tester_object.tester_name}
         request.session.set_expiry(60 * 60 * 24 * 7)
-        return redirect("/tester/list/")
+        if tester_object.id == 11:
+            return redirect("/recommend/")
+        else:
+            return redirect("/tester/list/")
     return render(request, "login.html", {"form": form})
 
 

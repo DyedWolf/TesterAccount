@@ -12,7 +12,8 @@ class AuthMiddleware(MiddlewareMixin):
 
         info_dict = request.session.get("info")
         if info_dict:
+            # if info_dict["id"] == 11:
+            #     return redirect("/recommend/")
             return
 
         return redirect("/login/")
-

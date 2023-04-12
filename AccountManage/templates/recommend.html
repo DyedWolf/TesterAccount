@@ -1,0 +1,208 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>想要GIAO~一下</title>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1-dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-datepicker/css/bootstrap-datepicker.css' %}">
+    <style>
+        .navbar {
+            border-radius: 0;
+        }
+    </style>
+
+</head>
+<body>
+<div class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#"> 想要GIAO~一下 </a>
+        </div>
+
+        <div class="collapse navbar-collapse">
+
+            <ul class="nav navbar-nav">
+                <li><a href="/recommend/"> 添加推荐 </a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                       role="button">{{ request.session.info.name }} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">个人资料</a></li>
+                        <li><a href="/my_information/">我的信息</a></li>
+                        <li><a href="/logout/">注销</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</div>
+
+<div>
+       <div class="container" style="width: 1000px">
+        <!--添加厅的推荐图和标题-->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">添加厅的推荐图和标题</h3>
+            </div>
+            <div class="panel-body">
+                <form method="post" novalidate="">
+                    <div class="form-group">
+                        <label>推荐标题 : 乌鸦坐飞机~</label>
+                    </div>
+                    <div class="form-group">
+                        <label>推荐封面 : </label>
+                        <img style="width: 100px;" src="/static/img/640.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label>需要推荐的sid : </label>
+                        <input type="text" class="form-control" name="sid" id="id_sid"
+                               placeholder="暂时没做数据校验和异常处理，自己检查sid和ssid哦" required/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>需要推荐的ssid：</label>
+                        <input type="text" class="form-control" name="ssid" id="id_ssid"
+                               placeholder="暂时没做数据校验和异常处理，自己检查sid和ssid哦" required/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>需要推荐的业务 : </label>
+                        <select name="businessType" class="form-control" required="" id="id_businessType">
+                            <option value="1">交友房</option>
+                            <option value="2">约战房</option>
+                            <option value="3">宝贝房</option>
+                            <option value="201">游戏房</option>
+                            <option value="501">技能卡房</option>
+                        </select>
+                    </div>
+
+                    <button type="button" id="btnAddRecommendRoom" class="btn btn-primary">确认</button>
+                </form>
+            </div>
+        </div>
+
+        <!--添加UID的推荐图和标题-->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">添加UID的推荐图和标题</h3>
+            </div>
+            <div class="panel-body">
+                <form method="post" novalidate="">
+                    <div class="form-group">
+                        <label>推荐标题 : 没想到吧~</label>
+                    </div>
+                    <div class="form-group">
+                        <label>推荐封面 : </label>
+                        <img style="width: 100px;" src="/static/img/650.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label>需要推荐的UID : </label>
+                        <input type="text" class="form-control" name="uid" id="id_uid"
+                               placeholder="暂时没做数据校验和异常处理，自己检查uid哦" required/>
+                    </div>
+                    <div class="form-group">
+                        <label>需要推荐的业务 : </label>
+                        <select name="businessType" class="form-control" required="" id="id_businessType">
+                            <option value="1">交友房</option>
+                            <option value="2">约战房</option>
+                            <option value="3">宝贝房</option>
+                            <option value="201">游戏房</option>
+                            <option value="501">技能卡房</option>
+                        </select>
+                    </div>
+
+                    <button type="button" id="btnAddRecommendUid" class="btn btn-primary">确认</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'plugins/bootstrap-3.4.1-dist/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"></script>
+<script>
+           $(function () {
+            bindBtnAddRecommendRoom();
+            bindBtnAddRecommendUid();
+        });
+
+        function bindBtnAddRecommendUid() {
+            $("#btnAddRecommendUid").click(function () {
+
+                uid = $('#id_uid').val();
+
+                if (uid === "") {
+                    alert("uid不能为空");
+                } else {
+                    $.ajax({
+                        url: "/recommend/add_recommend_uid/",
+                        type: "post",
+                        dataType: "json",
+                        data: {
+                            uid: $('#id_uid').val(),
+                            businessType: $("#id_businessType").val(),
+                        },
+                        success: function (res) {
+                            if (res.status) {
+                                alert("添加成功");
+                            }
+                            if (res.status === false) {
+                                alert(res.error);
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+
+        function bindBtnAddRecommendRoom() {
+            $("#btnAddRecommendRoom").click(function () {
+
+                sid = $('#id_sid').val();
+                ssid = $('#id_ssid').val();
+
+                if (sid === "" || ssid === "") {
+                    alert("sid或ssid不能为空");
+                } else {
+                    $.ajax({
+                        url: "/recommend/add_recommend_room/",
+                        type: "post",
+                        dataType: "json",
+                        data: {
+                            sid: $('#id_sid').val(),
+                            ssid: $('#id_ssid').val(),
+                            businessType: $("#id_businessType").val(),
+                        },
+                        success: function (res) {
+                            if (res.status) {
+                                alert("添加成功");
+                            }
+                            if (res.status === false) {
+                                alert(res.error);
+                            }
+                        }
+                    });
+                }
+            });
+        }
+</script>
+
+
+</body>
+</html>

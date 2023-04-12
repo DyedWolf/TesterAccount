@@ -59,6 +59,7 @@ urlpatterns = [
 
     # 添加推荐uid和sid
     path('recommend/list/', recommend.recommend_list),
+    path('recommend/', recommend.recommend),
     path('recommend/add_recommend_room/', recommend.add_recommend_room),
     path('recommend/add_recommend_uid/', recommend.add_recommend_uid),
 
@@ -68,4 +69,10 @@ urlpatterns = [
     path('hdid/delete/', hdid.hdid_delete),
     path('hdid/detail/', hdid.hdid_detail),
     path('hdid/edit/', hdid.hdid_edit),
+
+
+    # 分支测试进度表
+    path('schedule/', operation.schedule),
+    path('schedule/schedule_operate/', operation.schedule_operate),
+    path('download_schedule/', account.download_schedule),
 ]

@@ -225,3 +225,10 @@ def download_excel(request):
     r = FileResponse(f, as_attachment=True, filename="demo.xlsx")
     return r
 
+
+@csrf_exempt
+def download_schedule(request):
+    file_path = r"AccountManage/static/excel/schedule.xlsx"
+    f = open(file_path, "rb")
+    r = FileResponse(f, as_attachment=True, filename="schedule.xlsx")
+    return r

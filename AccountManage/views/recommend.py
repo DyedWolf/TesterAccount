@@ -12,6 +12,10 @@ def recommend_list(request):
     return render(request, "recommend_list.html")
 
 
+def recommend(request):
+    return render(request, "recommend.html")
+
+
 @csrf_exempt
 def add_recommend_room(request):
     client = pymongo.MongoClient(host='125.94.237.198', port=19999)
