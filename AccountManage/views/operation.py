@@ -250,7 +250,7 @@ def schedule_operate(request):
     print(type(file_object))
     print(file_object, sname)
 
-    execl_op = Execl_Op(file_object, "YO语音1.13")
+    execl_op = Execl_Op(file_object, sname)
     execl_op.del_flsh_rows_cols([2, 5, 6, 7, 8, 9, 10, 11, 12, 13, 16, 17, 18, 19, 26, 27, 28, 29, 30])
 
     execl_op.create_sheet()
@@ -314,7 +314,7 @@ class Execl_Op:
         for i in range(1, 2):
             first_sheet.append(self.get_row_value(1))
 
-        for i in range(self.get_col_value(2).index('iOS'), self.get_col_value(2).index(None) + 1):
+        for i in range(self.get_col_value(2).index('iOS')+1, self.get_col_value(2).index(None) + 1):
             first_sheet.append(self.get_row_value(i))
 
         wb.save('/TesterAccount/AccountManage/static/excel/schedule.xlsx')
