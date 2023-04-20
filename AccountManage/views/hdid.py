@@ -73,11 +73,11 @@ def hdid_edit(request):
     if not data["remark"]:
         data["remark"] = "/"
     if not data["zhuiwan"]:
-        data["zhuiwan"] = "暂无"
+        data["zhuiwan"] = "暂未输入"
     if not data["Yomi"]:
-        data["Yomi"] = "暂无"
+        data["Yomi"] = "暂未输入"
     if not data["YaYa"]:
-        data["YaYa"] = "暂无"
+        data["YaYa"] = "暂未输入"
 
     form = HDID(data=data, instance=row_object)
     if form.is_valid():
