@@ -30,7 +30,7 @@ def login(request):
         if tester_object.id == 11:
             return redirect("/recommend/")
         else:
-            return redirect("/tester/list/")
+            return redirect("/account/list/")
     return render(request, "login.html", {"form": form})
 
 
