@@ -12,6 +12,7 @@ from AccountManage.utils.pagination import Pagination
 
 
 def account_list(request):
+    """ 用户列表 """
     if request.method == "GET":
         form_list = Account()
         form = Upload()
@@ -109,7 +110,9 @@ def account_add(request):
         # form.save()
         with connection.cursor() as cursor:
             sql = "insert into accountmanage_account (account_uid,account_YY,account_card,account_belong_id,account_remarks,account_pwd) values ({},{},'{}',{},'{}','{}')".format(
-                request.POST.get("account_uid"), request.POST.get("account_YY"), request.POST.get("account_card"), request.POST.get("account_belong"), request.POST.get("account_remarks"), request.POST.get("account_pwd"))
+                request.POST.get("account_uid"), request.POST.get("account_YY"), request.POST.get("account_card"),
+                request.POST.get("account_belong"), request.POST.get("account_remarks"),
+                request.POST.get("account_pwd"))
             print(sql)
             cursor.execute(sql)
             sql_data = cursor.fetchall()  # 获取一条数据, 使用fetchone()
@@ -138,7 +141,9 @@ def account_edit(request):
     if form.is_valid():
         with connection.cursor() as cursor:
             sql = "update accountmanage_account set account_uid='{}',account_YY='{}',account_card='{}',account_belong_id={},account_remarks='{}',account_pwd='{}' where id = {}".format(
-                request.POST.get("account_uid"), request.POST.get("account_YY"), request.POST.get("account_card"), request.POST.get("account_belong"), request.POST.get("account_remarks"), request.POST.get("account_pwd"), aid)
+                request.POST.get("account_uid"), request.POST.get("account_YY"), request.POST.get("account_card"),
+                request.POST.get("account_belong"), request.POST.get("account_remarks"),
+                request.POST.get("account_pwd"), aid)
             print(sql)
             cursor.execute(sql)
             sql_data = cursor.fetchall()  # 获取一条数据, 使用fetchone()

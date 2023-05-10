@@ -1,60 +1,36 @@
-import time, json
-
-import requests, random
+import requests, json, re
 
 
-def test1(data):
-    room = [1454962223, 1454962223]
-    url = "https://zhuiya-test.yy.com/admin-web/robot/public/getHitRule"
-    data = {
-        "uid": data["uid"]
-    }
-    res = requests.get(url=url, params=data)
-    print(res.text)
-    if "uidEnterFirst" in json.loads(res.text)["data"]:
-        sid = json.loads(res.text)["data"]["uidEnterFirst"][0:10]
-        ssid = json.loads(res.text)["data"]["uidEnterFirst"][11:21]
-        print(sid, ssid)
-        room[0] = json.loads(res.text)["data"]["uidEnterFirst"][0:10]
-        room[1] = json.loads(res.text)["data"]["uidEnterFirst"][11:21]
-        return room
-    return room
-
-
-def test2(data):
-    url = "https://zhuiya-test.yy.com/admin-web/robot/public/getPhoneMask"
-    data = {
-        "uid": data["uid"]
-    }
-    res = requests.get(url=url, params=data)
-    print(res.text)
-
-
-def test3(data):
+def clear_cache(room_data):
     url = "https://zhuiya-test.yy.com/admin-web/robot/public/clearCache"
     data = {
-        "uid": data["uid"],
-        "sid": data["sid"],
-        "ssid": data["ssid"]
-
+        "uid": room_data[-1],
+        "sid": room_data[0],
+        "ssid": room_data[1]
     }
     res = requests.get(url=url, params=data)
     print(res.text)
+    print(res.url)
 
 
-def sss(data):
-    room = test1(data)
-    time.sleep(1)
-    test2(data)
-    time.sleep(1)
-    data["sid"] = room[0]
-    data["ssid"] = room[1]
-    test3(data)
-    time.sleep(1)
-    test1(data)
+def get_hit_rule(user_data):
+    url = "https://zhuiya-test.yy.com/admin-web/robot/public/getHitRule"
+    data = {
+        "uid": user_data["uid"]
+    }
+    res = requests.get(url=url, params=data)
+    data = json.loads(res.text)["data"]
+    match_obj = re.match(r'(.*)uidEnterFirst:(.*?)\\n.*', str(data), re.M | re.I)
+    print(match_obj)
+    if match_obj:
+        room_data = match_obj .group(2).split("/")
+        room_data.append(user_data["uid"])
+        return room_data
+    else:
+        print("No match!!")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # iPhone7Plus
     data1 = {
         "uid": "141746805669898",
@@ -62,7 +38,7 @@ if __name__ == '__main__':
         "sid": "1457430095",
         "ssid": "1457430095"
     }
-    # 	iPhone14
+    # iPhone14
     data2 = {
         "uid": "2718596829",
         "hdid": "009e66ecdf97f911e3e0c814082c78f5a6132a4a",
@@ -79,7 +55,8 @@ if __name__ == '__main__':
     # 三星NOTE20
     data4 = {
         "uid": "2756691246",
-        "hdid": "5ea259affc2808778420bca55666b374",
+        "hdid": "1bdee9da694b72ec57fcbe22e3b3aa9c",  # 华为P40
+        # "hdid": "5ea259affc2808778420bca55666b374",  # 三星NOTE20
         "sid": "1454054224",
         "ssid": "2807602905"
     }
@@ -91,4 +68,6 @@ if __name__ == '__main__':
         "ssid": "2807602905"
     }
 
-    test1(data1)
+    room_data = get_hit_rule(data5)
+    print(room_data)
+    clear_cache(room_data)
