@@ -1,71 +1,43 @@
-import requests, json, re
+import threading
+
+# 创建子线程类，继承自 Thread 类
+import requests
 
 
-def clear_cache(room_data):
-    url = "https://zhuiya.yy.com/admin-web/robot/public/clearCache"
-    data = {
-        "uid": room_data[-1],
-        "sid": room_data[0],
-        "ssid": room_data[1]
-    }
-    res = requests.get(url=url, params=data)
-    print(res.text)
-    print(res.url)
+class my_Thread(threading.Thread):
+    def __init__(self, add):
+        threading.Thread.__init__(self)
+        self.add = add
+
+    # 重写run()方法
+    def run(self):
+        for arc in self.add:
+            # 调用 getName() 方法获取当前执行该程序的线程名
+            print(threading.current_thread().getName() + " " + arc)
+            self.add_gift(arc)
+
+    def add_gift(self, arc):
+        url = "http://turnover-bg-test.yy.com/props/addProps/2"
+        data = {
+            "propId": 20421,
+            "pricingId": 1010452,
+            "uid": arc,
+            "nums": 1,
+            "countryCode": "cn"
+        }
+        response = requests.get(url=url, params=data)
+        print(response.text)
 
 
-def get_hit_rule(user_data):
-    url = "https://zhuiya.yy.com/admin-web/robot/public/getHitRule"
-    data = {
-        "uid": user_data["uid"]
-    }
-    res = requests.get(url=url, params=data)
-    data = json.loads(res.text)["data"]
-    match_obj = re.match(r'(.*)uidEnterFirst:(.*?)\\n.*', str(data), re.M | re.I)
-    if match_obj:
-        room_data = match_obj .group(2).split("/")
-        room_data.append(user_data["uid"])
-        return room_data
-    else:
-        print("No match!!")
 
 
-if __name__ == "__main__":
-    # iPhone7Plus
-    data1 = {
-        "uid": "141746805669898",
-        "hdid": "1883f0eecd52807b6dba124776639a327878b725",
-        "sid": "1457430095",
-        "ssid": "1457430095"
-    }
-    # iPhone14
-    data2 = {
-        "uid": "2718596829",
-        "hdid": "009e66ecdf97f911e3e0c814082c78f5a6132a4a",
-        "sid": "1457430095",
-        "ssid": "1457430095"
-    }
-    # Redmi K40
-    data3 = {
-        "uid": "2678035356",
-        "hdid": "1db0f59a5407fa61f496804a515f28fa",
-        "sid": "1457430095",
-        "ssid": "1457430095"
-    }
-    # 三星NOTE20
-    data4 = {
-        "uid": "2756691246",
-        "hdid": "5ea259affc2808778420bca55666b374",
-        "sid": "1454054224",
-        "ssid": "2807602905"
-    }
-    # OPPO R17
-    data5 = {
-        "uid": "2818222471",
-        "hdid": "679bd65640faeef7235cf9e21e4d8b39",
-        "sid": "1454054224",
-        "ssid": "2807602905"
-    }
 
-    room_data = get_hit_rule(data1)
-    print(room_data)
-    clear_cache(room_data)
+# 定义为 run() 方法传入的参数
+my_tuple = ["2711427642", "2711372130", "2711581533"]
+# 创建子线程
+mythread = my_Thread(my_tuple, prop_id, pricing_id, nums)
+# 启动子线程
+mythread.start()
+# 主线程执行此循环
+for i in range(len(my_tuple)):
+    print(threading.current_thread().getName())

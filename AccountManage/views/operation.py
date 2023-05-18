@@ -1,6 +1,6 @@
 import time
 
-import requests, json, pymongo
+import requests, json, threading, mysql.connector
 
 from openpyxl import *
 
@@ -24,7 +24,7 @@ def operation_list(request, aid):
     return render(request, "operation_list.html", result_data)
 
 
-cookie = "CHrt_ed28_saltkey=E0lQ0W7A; CHrt_ed28_lastvisit=1681796607; CHrt_ed28_visitedfid=214D215D219D218D232; CHrt_ed28_ulastactivity=bb6c5fso5SA1xroC7bGPknamFB46iFjJ8CImtZdpvi3Z/pisT0fB; CHrt_ed28_auth=da86ZPV+3y4N+WvIaKgqcQQERsMv4SxoVnxJ4Ff0T/KNbSGY9KBwJqAbRKVdB0Gbp3lQbAZBmTXKsWDX/b7Bnv510fec; CHrt_ed28_lastcheckfeed=1119973|1681975034; hd_newui=0.060556767692634406; hiido_ui=0.8694076315662636; _ga=GA1.2.1463216810.1682563192; ab_sr=1.0.1_OGJlNDNjNTgwNWNlNjhiNWExODM4MjlkMDBiYWJiMzY0MjNjYzQyNThhNjhiOWZmNzFkZjAxOWU1ZjRmODBkYjExMWZiNzM4Y2JkMWExN2ZhYjZkMTA5ZTM3NTBhMDAyZTQ1YWNkNmJlZjM5M2Q4ZGM5YjMwNjQ2MmY2YTc0ZjlmNTIyYTg5Y2RlMTAxNjc1ZDAxNWExMzI2YmI3MWFmNw==; udb_c=; yyuid=50047479; username=dw_wangchengqing; password=73E974684B55BFDF04C573429ED667E541333C17; osinfo=AE91D768475EC96E931E0EE3DE26453E1B565DF6; udb_oar=04D36EBA30ABADAAE77C86BB40E163B3F121A72460641AB429A38DBB75F2AC9350BBA7786E7931724159BF2DC4745DD4ED83B70341D7098861B929D2BDCBEEB012306E9F34B82DBF3E9627FDA8E30EFC2E3F615031EA903CE743D730EC417822CC4D4904D2A12326C9746B27529958F2DA204FB7508F3AA7EBE8420642B12F615C143000771BF19FF363AB813F8B520D5B3222F9D189A9CCDF7773E848F6C8F38AB3FF27327CFC1CA8AD65E1F426EB94621B55B05820BC554236AD8BE95FE2C20F691059913D046D22D39A00F7495CDD39C87E251B0B61C0E5F1BA995DD7819FB22EF89141B7796CD739DA735140E888827D36EB30E4CA29E8C1C1630339B7A79D09040872C2B52F040081EF74ABFA93AAB20DB76180FBA9049CEA478EB6572A65332BD88D3743BC8C1931D7D6B6A3E42AD68CFFD9BAE72E5FDDA1F6DCBD8B4D4B2E1C4B1B7695A5764946C3211AB79A87BB271D58A78261253D92628B2880B70EA8D5A4333D7007F81BC87EE1B080CB039075789E3E281CB052733F7A5B38B3"
+cookie = "hd_newui=0.3709373329860539; Hm_lvt_c493393610cdccbddc1f124d567e36ab=1683283379; hiido_ui=0.8475475681936762; _ga=GA1.2.1811866272.1683537797; ab_sr=1.0.1_Y2FkOTA5NzUzZTMzMTYzOWM5NjZiMzY5Njk2MTUwYzkzMjJkM2FiYWQ4YWY2ODJkNGIwZjIxZDJlNjkwNTJmNmU2ZjFhZDQxZTMxZWI0YjhlZWQ4M2JmY2E0YTFjZjg2OGIwODMxYmY0Yzc3YTU4MzZhM2UwMzdkN2Y1NzcxYmJiZTA3Yzg3NTZiNGJjZGI4ZDdhY2Y2MWFmNzU1Mzc5Zg==; udb_c=; yyuid=50047479; username=dw_wangchengqing; password=01B3085E325E6B5EA973041ABB0C14A31E99D810; osinfo=3A8103E9D3647D66A73D79D32FC105DDD4E2F573; udb_oar=6A8BA5FA78C047484697A34FD34F7C794193C9BE2040919A97E085CD86D30A06D847146012A2D05B82E33007A2441FF2EF24DE59FB27B7E8D48CAC29CFC6FC702A1B44E3E13E6AE3C21ADD0C4DE10E345E08167E10EEC2F87B333F4271B526FD6DE9B9DA78B0D4BC4B621287710E2D763D55BCBD28DBB3CE97A83D05DD108D0A24F0B85B796EE61285E1AB354735B5664F96EE56C675EDFC0044E1F2D2A2BC33DCFA8AE78F583071E0483D30C3F5B7558857BDB34C7DB9F9E1C8E196241B5B8216ECD3C33DC153A6296DDC7924C009F4AF3E4E3091AC6512CADA4A00AC28E71104CBA6F2013B6F691719FFA42855C9DB47B04DD12C1FA106DB6F79C20FF027B31A72DDF0BC38B564BC367C17C7D52CA201F1711FAEAB5A3B43D085F41470C8D9CCA38BE6663F2B6E4E91B7679EF0422C72DAD8E1D1EBF4E4A0033CAA22F1720E46B94B0056D46774C4F256AD09CEBF7DC91CFA3002A05F1172F69A77663B85A282A9E3998E42D5BCC820D27489E2C5E8C11A121AD8D6D09E830F16E02B849CC7"
 
 
 @csrf_exempt
@@ -207,7 +207,7 @@ def add_all_balance(request):
     all_coin = request.POST.get("allCoin")
     print(account_belong_id, all_qute, all_coin)
     with connection.cursor() as cursor:
-        sql = "SELECT `accountmanage_account`.`account_uid` FROM `accountmanage_account` WHERE account_belong_id = '{}' ".format(
+        sql = "SELECT `accountmanage_account`.`account_uid` FROM `accountmanage_account` WHERE account_belong_id = '{}';".format(
             account_belong_id)
 
         # print(sql)
@@ -237,6 +237,78 @@ def add_all_balance(request):
 
         result = {"status": False, "res": res.text}
         return JsonResponse(result)
+
+
+# @csrf_exempt
+# def add_all_gift(request):
+#     account_belong_id = request.POST.get("account_belong_id")
+#     prop_id = request.POST.get("addPropId")
+#     pricing_id = request.POST.get("allPricingId")
+#     nums = request.POST.get("addNums")
+#     print(account_belong_id, prop_id, pricing_id, nums)
+#     with connection.cursor() as cursor:
+#         sql = "SELECT `accountmanage_account`.`account_uid` FROM `accountmanage_account` WHERE account_belong_id = '{}';".format(
+#             account_belong_id)
+#
+#         # print(sql)
+#         cursor.execute(sql)
+#         sql_data = cursor.fetchall()  # 获取一条数据, 使用fetchone()
+#         print(sql_data)
+#         uids = []
+#         for value in sql_data:
+#             uids.append(str(value[0]))
+#         print(uids)
+#
+#     # 定义为 run() 方法传入的参数
+#     my_tuple = uids
+#     # 创建子线程
+#     mythread = my_Thread(my_tuple, prop_id, pricing_id, nums)
+#     # 启动子线程
+#     mythread.start()
+#     # 主线程执行此循环
+#     for i in range(len(my_tuple)):
+#         print(threading.current_thread().getName())
+#
+#     result = {"status": True}
+#     return JsonResponse(result)
+
+
+@csrf_exempt
+def uid_add_gift(request):
+    nums = request.POST.get("allNums")
+    uid = request.POST.get("uid")
+    print(uid, nums)
+
+    mydb = mysql.connector.connect(
+        host="125.94.240.75",  # 数据库主机地址
+        port=8066,
+        user="*dw_dingyong2@turnover_test@fix",  # 数据库用户名
+        passwd="AMhDwC9xSK41OkLn427gC2MQ",  # 数据库密码
+        database="turnover"
+    )
+    mycursor = mydb.cursor()
+
+    mycursor.execute(
+        "SELECT a.id,b.pricing_id FROM tb_to_props_meta a  JOIN tb_to_props_consume_rec b  ON b.prop_id=a.id WHERE a.app_id=2 AND b.currency_type=1 AND DATE(b.consume_time)>'2023-04-01'  GROUP BY b.prop_id ")
+
+    myresult = mycursor.fetchall()  # fetchall() 获取所有记录
+    print(len(myresult))
+    # for x in myresult:
+    #     print(x)
+
+    # 定义为 run() 方法传入的参数
+    data = {"data": myresult, "pricing_id": None, "prop_id": None, "uid": uid, "nums": nums}
+    my_tuple = data
+    # 创建子线程
+    mythread = my_Thread(my_tuple)
+    # 启动子线程
+    mythread.start()
+    # 主线程执行此循环
+    for i in range(len(myresult)):
+        print(threading.current_thread().getName())
+
+    result = {"status": True}
+    return JsonResponse(result)
 
 
 def schedule(request):
@@ -320,3 +392,28 @@ class Execl_Op:
 
         wb.save('/TesterAccount/AccountManage/static/excel/schedule.xlsx')
         wb.close()
+
+
+class my_Thread(threading.Thread):
+    def __init__(self, data=None):
+        threading.Thread.__init__(self)
+        self.add = data
+
+    # 重写run()方法
+    def run(self):
+        for arc in self.add["data"]:
+            # 调用 getName() 方法获取当前执行该程序的线程名
+            # print(threading.current_thread().getName() + " " + str(arc))
+            self.add_gift(uid=self.add["uid"], prop_id=arc[0], pricing_id=arc[1], nums=self.add["nums"])
+
+    def add_gift(self, uid, prop_id, pricing_id, nums):
+        url = "http://turnover-bg-test.yy.com/props/addProps/2"
+        data = {
+            "propId": prop_id,
+            "pricingId": pricing_id,
+            "uid": str(uid),
+            "nums": nums,
+            "countryCode": "cn"
+        }
+        response = requests.get(url=url, params=data)
+        print(response.text)

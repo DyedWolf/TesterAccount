@@ -171,14 +171,14 @@
         <!--批量给uid添加货币-->
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">批量给uid添加货币</h3>
+                <h3 class="panel-title">一个uid添加批量礼物</h3>
             </div>
 
             <div class="panel-body">
                 <form method="post" novalidate="">
                     <div class="form-group">
                         <label>批量添加谁的账号 : </label>
-                        <select name="accountBelongId" class="form-control" required="" id="accountBelongId">
+                        <select name="accountBelongId0" class="form-control" required="" id="accountBelongId0">
                         </select>
                     </div>
                     <div class="form-group">
@@ -199,11 +199,77 @@
 
                     <button type="button" id="btnAddAllBalance" class="btn btn-primary">确认</button>
                     <h6 style="color: red" id="tips">确认后，属于自己的账号全部添加对应货币</h6>
-                    <div></div>
+
                 </form>
             </div>
 
         </div>
+
+
+{#        <!--批量给uid添加包裹礼物-->#}
+{#        <div class="panel panel-default">#}
+{#            <div class="panel-heading">#}
+{#                <h3 class="panel-title">批量uid加一个礼物</h3>#}
+{#            </div>#}
+{##}
+{#            <div class="panel-body">#}
+{#                <form method="post" novalidate="">#}
+{#                    <div class="form-group">#}
+{#                        <label>批量添加谁的账号 : </label>#}
+{#                        <select name="accountBelongId1" class="form-control" required="" id="accountBelongId1">#}
+{#                        </select>#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        <label>包裹礼物数量 : </label>#}
+{#                        <input type="text" class="form-control" value="" placeholder="包裹礼物数量" required="" id="addNums">#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        <label>礼物道具id : </label>#}
+{#                        <input type="text" class="form-control" value="" placeholder="礼物道具id" required=""#}
+{#                               id="addPropId">#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        <label>礼物费用id : </label>#}
+{#                        <input type="text" class="form-control" value="" placeholder="礼物费用id" required=""#}
+{#                               id="allPricingId">#}
+{#                    </div>#}
+{##}
+{##}
+{#                    <button type="button" id="btnAddAllGift" class="btn btn-primary">确认</button>#}
+{##}
+{##}
+{#                </form>#}
+{#            </div>#}
+{##}
+{#        </div>#}
+
+
+        <!--一个uid添加不同礼物-->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">一个uid添加不同礼物</h3>
+            </div>
+
+            <div class="panel-body">
+                <form method="post" novalidate="">
+                    <div class="form-group">
+                        <label>设置新账号的UID : </label>
+                        <a type="text" class="form-control">{{ account_data.account_uid }}</a>
+                    </div>
+                    <div class="form-group">
+                        <label>包裹礼物数量 : </label>
+                        <input type="text" class="form-control" value="" placeholder="包裹礼物数量" required="" id="allNums">
+                    </div>
+
+
+                    <button type="button" id="btnUidAddGift" class="btn btn-primary">确认</button>
+
+
+                </form>
+            </div>
+
+        </div>
+
     </div>
 
 {% endblock %}
@@ -222,6 +288,8 @@
             bindBtnResetSignLog();
             binBtnOptionTest();
             bindBtnAddAllBalance();
+            bindBtnAddAllGift();
+            bindBtnUidAddGift();
         });
 
         function binBtnOptionTest() {
@@ -235,9 +303,11 @@
                         $.each(res.data, function (name, value) {
                             var option = "<option value=\"" + value[0] + "\"";
                             option += ">" + value[1] + "</option>"; //动态添加数据
-                            $('#accountBelongId').append(option);
+                            $('#accountBelongId0').append(option);
+                            $('#accountBelongId1').append(option);
                         });
-                        $('#accountBelongId').val(10);
+                        $('#accountBelongId0').val(10);
+                        $('#accountBelongId1').val(10);
                     }
                 }
             });
@@ -392,6 +462,51 @@
 
                     }
 
+                });
+            });
+        }
+
+        function bindBtnAddAllGift() {
+            $('#btnAddAllGift').click(function () {
+                $.ajax({
+                    url: "/operation/add_all_gift/",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        addNums: $("#addNums").val(),
+                        account_belong_id: $("#accountBelongId1").val(),
+                        addPropId: $("#addPropId").val(),
+                        allPricingId: $("#allPricingId").val()
+                    },
+                    success: function (res) {
+                        if (res.status) {
+                            alert("添加成功");
+                        } else {
+                            alert(res["res"]["msg"])
+                        }
+                    }
+                });
+            });
+        }
+
+
+                function bindBtnUidAddGift() {
+            $('#btnUidAddGift').click(function () {
+                $.ajax({
+                    url: "/operation/uid_add_gift/",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        allNums: $("#allNums").val(),
+                        uid: $("#account_uid").text()
+                    },
+                    success: function (res) {
+                        if (res.status) {
+                            alert("添加成功");
+                        } else {
+                            alert(res["res"]["msg"])
+                        }
+                    }
                 });
             });
         }
