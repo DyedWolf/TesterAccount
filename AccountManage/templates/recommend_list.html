@@ -16,11 +16,13 @@
             <div class="panel-body">
                 <form method="post" novalidate="">
                     <div class="form-group">
-                        <label>推荐标题 : 乌鸦坐飞机~</label>
-                    </div>
-                    <div class="form-group">
                         <label>推荐封面 : </label>
                         <img style="width: 100px;" src="/static/img/640.jpg">
+                    </div>
+                                        <div class="form-group">
+                        <label>推荐标题 : </label>
+                        <input type="text" class="form-control" name="sid_title" id="id_sid_title"
+                               placeholder="输入推荐标题" required/>
                     </div>
                     <div class="form-group">
                         <label>需要推荐的sid : </label>
@@ -58,11 +60,13 @@
             <div class="panel-body">
                 <form method="post" novalidate="">
                     <div class="form-group">
-                        <label>推荐标题 : 没想到吧~</label>
-                    </div>
-                    <div class="form-group">
                         <label>推荐封面 : </label>
                         <img style="width: 100px;" src="/static/img/650.jpg">
+                    </div>
+                                        <div class="form-group">
+                        <label>推荐标题 : </label>
+                        <input type="text" class="form-control" name="uid_title" id="id_uid_title"
+                               placeholder="输入推荐标题" required/>
                     </div>
                     <div class="form-group">
                         <label>需要推荐的UID : </label>
@@ -111,6 +115,7 @@
                         type: "post",
                         dataType: "json",
                         data: {
+                            title: $('#id_uid_title').val(),
                             uid: $('#id_uid').val(),
                             businessType: $("#id_businessType").val(),
                         },
@@ -142,6 +147,7 @@
                         type: "post",
                         dataType: "json",
                         data: {
+                            title: $('#id_sid_title').val(),
                             sid: $('#id_sid').val(),
                             ssid: $('#id_ssid').val(),
                             businessType: $("#id_businessType").val(),

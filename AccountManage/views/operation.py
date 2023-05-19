@@ -239,45 +239,28 @@ def add_all_balance(request):
         return JsonResponse(result)
 
 
-# @csrf_exempt
-# def add_all_gift(request):
-#     account_belong_id = request.POST.get("account_belong_id")
-#     prop_id = request.POST.get("addPropId")
-#     pricing_id = request.POST.get("allPricingId")
-#     nums = request.POST.get("addNums")
-#     print(account_belong_id, prop_id, pricing_id, nums)
-#     with connection.cursor() as cursor:
-#         sql = "SELECT `accountmanage_account`.`account_uid` FROM `accountmanage_account` WHERE account_belong_id = '{}';".format(
-#             account_belong_id)
-#
-#         # print(sql)
-#         cursor.execute(sql)
-#         sql_data = cursor.fetchall()  # 获取一条数据, 使用fetchone()
-#         print(sql_data)
-#         uids = []
-#         for value in sql_data:
-#             uids.append(str(value[0]))
-#         print(uids)
-#
-#     # 定义为 run() 方法传入的参数
-#     my_tuple = uids
-#     # 创建子线程
-#     mythread = my_Thread(my_tuple, prop_id, pricing_id, nums)
-#     # 启动子线程
-#     mythread.start()
-#     # 主线程执行此循环
-#     for i in range(len(my_tuple)):
-#         print(threading.current_thread().getName())
-#
-#     result = {"status": True}
-#     return JsonResponse(result)
+@csrf_exempt
+def add_select_gift(request):
+    uid = request.POST.get("uid")
+    nums = request.POST.get("selectNums")
+    gift_list = request.POST.get("giftList")
+    data = request.POST
+    print(data)
+    print(uid, nums, gift_list)
+    print(gift_list.split(','))
+
+    result = {"status": True}
+    return JsonResponse(result)
 
 
 @csrf_exempt
 def uid_add_gift(request):
     nums = request.POST.get("allNums")
     uid = request.POST.get("uid")
-    print(uid, nums)
+    gift_list = request.POST.get("giftList")
+    print(uid, nums, gift_list)
+    gift_list = gift_list.split(",")
+    print(uid, nums, gift_list)
 
     mydb = mysql.connector.connect(
         host="125.94.240.75",  # 数据库主机地址
@@ -289,25 +272,46 @@ def uid_add_gift(request):
     mycursor = mydb.cursor()
 
     mycursor.execute(
-        "SELECT a.id,b.pricing_id FROM tb_to_props_meta a  JOIN tb_to_props_consume_rec b  ON b.prop_id=a.id WHERE a.app_id=2 AND b.currency_type=1 AND DATE(b.consume_time)>'2023-04-01'  GROUP BY b.prop_id ")
+        "SELECT a.id,b.pricing_id FROM tb_to_props_meta a JOIN tb_to_props_consume_rec b ON b.prop_id=a.id WHERE a.app_id=2 AND b.currency_type=1 GROUP BY b.prop_id ")
 
     myresult = mycursor.fetchall()  # fetchall() 获取所有记录
-    print(len(myresult))
-    # for x in myresult:
-    #     print(x)
+    # print(myresult)
+    # print(len(myresult))
+    final_gift_list = []
+    if gift_list[0]:
+        for num in myresult:
+            if str(num[1]) in gift_list:
+                final_gift_list.append(num)
 
-    # 定义为 run() 方法传入的参数
-    data = {"data": myresult, "pricing_id": None, "prop_id": None, "uid": uid, "nums": nums}
-    my_tuple = data
+        # 定义为 run() 方法传入的参数
+        data = {"data": final_gift_list, "uid": uid, "nums": nums}
+        print(data)
+    else:
+        data = {"data": myresult, "uid": uid, "nums": nums}
+        print(data)
     # 创建子线程
-    mythread = my_Thread(my_tuple)
-    # 启动子线程
-    mythread.start()
-    # 主线程执行此循环
-    for i in range(len(myresult)):
-        print(threading.current_thread().getName())
+    use_threading(data)
 
     result = {"status": True}
+    return JsonResponse(result)
+
+
+def get_gift_list(request):
+    mydb = mysql.connector.connect(
+        host="125.94.240.75",  # 数据库主机地址
+        port=8066,
+        user="*dw_dingyong2@turnover_test@fix",  # 数据库用户名
+        passwd="AMhDwC9xSK41OkLn427gC2MQ",  # 数据库密码
+        database="turnover"
+    )
+    mycursor = mydb.cursor()
+
+    mycursor.execute(
+        "SELECT a.id,b.pricing_id,a.name FROM tb_to_props_meta a  JOIN tb_to_props_consume_rec b  ON b.prop_id=a.id WHERE a.app_id=2 AND b.currency_type=1 GROUP BY b.prop_id")
+
+    myresult = mycursor.fetchall()  # fetchall() 获取所有记录
+
+    result = {"status": True, "data": myresult}
     return JsonResponse(result)
 
 
@@ -417,3 +421,12 @@ class my_Thread(threading.Thread):
         }
         response = requests.get(url=url, params=data)
         print(response.text)
+
+
+def use_threading(data):
+    mythread = my_Thread(data)
+    # 启动子线程
+    mythread.start()
+    # 主线程执行此循环
+    for i in range(len(data["data"])):
+        print(threading.current_thread().getName())

@@ -12,6 +12,7 @@ mycursor = mydb.cursor()
 mycursor.execute("SELECT a.id,b.pricing_id FROM tb_to_props_meta a  JOIN tb_to_props_consume_rec b  ON b.prop_id=a.id WHERE a.app_id=2 AND b.currency_type=1 GROUP BY b.prop_id")
 
 myresult = mycursor.fetchall()  # fetchall() 获取所有记录
+print(myresult)
 print(len(myresult))
 print(type(myresult))
 # for x in myresult:

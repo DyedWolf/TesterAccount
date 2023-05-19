@@ -19,7 +19,7 @@
         <!--充值-->
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">账号充值</h3>
+                <h3 class="panel-title">测试环境的账号充值</h3>
             </div>
             <div class="panel-body">
                 <form method="post" novalidate="">
@@ -120,7 +120,7 @@
         <!--删除签到记录-->
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">删除签到记录</h3>
+                <h3 class="panel-title">删除测试环境的签到记录</h3>
             </div>
             <div class="panel-body">
                 <form method="post" novalidate="">
@@ -153,7 +153,7 @@
         <!--重置超神贵族等级-->
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">重置超神贵族等级</h3>
+                <h3 class="panel-title">重置测试环境的超神贵族等级</h3>
             </div>
             <div class="panel-body">
                 <form method="post" novalidate="">
@@ -206,69 +206,35 @@
         </div>
 
 
-{#        <!--批量给uid添加包裹礼物-->#}
-{#        <div class="panel panel-default">#}
-{#            <div class="panel-heading">#}
-{#                <h3 class="panel-title">批量uid加一个礼物</h3>#}
-{#            </div>#}
-{##}
-{#            <div class="panel-body">#}
-{#                <form method="post" novalidate="">#}
-{#                    <div class="form-group">#}
-{#                        <label>批量添加谁的账号 : </label>#}
-{#                        <select name="accountBelongId1" class="form-control" required="" id="accountBelongId1">#}
-{#                        </select>#}
-{#                    </div>#}
-{#                    <div class="form-group">#}
-{#                        <label>包裹礼物数量 : </label>#}
-{#                        <input type="text" class="form-control" value="" placeholder="包裹礼物数量" required="" id="addNums">#}
-{#                    </div>#}
-{#                    <div class="form-group">#}
-{#                        <label>礼物道具id : </label>#}
-{#                        <input type="text" class="form-control" value="" placeholder="礼物道具id" required=""#}
-{#                               id="addPropId">#}
-{#                    </div>#}
-{#                    <div class="form-group">#}
-{#                        <label>礼物费用id : </label>#}
-{#                        <input type="text" class="form-control" value="" placeholder="礼物费用id" required=""#}
-{#                               id="allPricingId">#}
-{#                    </div>#}
-{##}
-{##}
-{#                    <button type="button" id="btnAddAllGift" class="btn btn-primary">确认</button>#}
-{##}
-{##}
-{#                </form>#}
-{#            </div>#}
-{##}
-{#        </div>#}
-
-
         <!--一个uid添加不同礼物-->
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">一个uid添加不同礼物</h3>
             </div>
-
             <div class="panel-body">
                 <form method="post" novalidate="">
                     <div class="form-group">
                         <label>设置新账号的UID : </label>
                         <a type="text" class="form-control">{{ account_data.account_uid }}</a>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" >
                         <label>包裹礼物数量 : </label>
                         <input type="text" class="form-control" value="" placeholder="包裹礼物数量" required="" id="allNums">
                     </div>
+                    <div class="form-group">
+                        <button type="button" id="btnUidAddGift" class="btn btn-primary">添加礼物到包裹</button>
+                        <h6 style="color: red;">勾选了礼物就添加勾选的礼物到包裹，未勾选就全部添加到包裹</h6>
+                    </div>
+                    <div class="form-group">
+                        <label>包裹礼物列表 : </label>
+                        <div id="giftList">
 
-
-                    <button type="button" id="btnUidAddGift" class="btn btn-primary">确认</button>
-
-
+                        </div>
+                    </div>
                 </form>
             </div>
-
         </div>
+
 
     </div>
 
@@ -290,6 +256,8 @@
             bindBtnAddAllBalance();
             bindBtnAddAllGift();
             bindBtnUidAddGift();
+            binGetGiftList();
+            bindBtnAddSelectGift();
         });
 
         function binBtnOptionTest() {
@@ -313,6 +281,25 @@
             });
         }
 
+        function binGetGiftList() {
+            $.ajax({
+                url: '/operation/get_gift_list/',
+                dataType: 'json',
+                type: 'get',
+                success: function (res) {
+                    console.log(res)
+                    if (res.status) {
+                        $.each(res.data, function (name, value) {
+                            var input = "<div>";
+                            input += "<input type='checkbox' style='margin: 5px;' name='select_gift_list' value=\"" + value[1] + "\"";
+                            input += ">" + "道具id:" + value[0] + "\n" + "费用id:" + value[1] + "\n" + "礼物名称:" + value[2] + "\n" + "</option>"; //动态添加数据
+                            input += "</div>"
+                            $('#giftList').append(input);
+                        });
+                    }
+                }
+            });
+        }
 
         function bindBtnNewAccount() {
             $("#btnNewAccount").click(function () {
@@ -468,15 +455,19 @@
 
         function bindBtnAddAllGift() {
             $('#btnAddAllGift').click(function () {
+                var checkID = []; // 定义空数组
+                $("input[name='select_gift_list']:checked").each(function (i) {
+                    checkID[i] = $(this).val();
+                });
+
                 $.ajax({
-                    url: "/operation/add_all_gift/",
+                    url: "/operation/add_select_gift/",
                     type: "post",
                     dataType: "json",
                     data: {
-                        addNums: $("#addNums").val(),
-                        account_belong_id: $("#accountBelongId1").val(),
-                        addPropId: $("#addPropId").val(),
-                        allPricingId: $("#allPricingId").val()
+                        allNums: $("#allNums").val(),
+                        uid: $("#account_uid").text(),
+                        giftList: $("")
                     },
                     success: function (res) {
                         if (res.status) {
@@ -489,16 +480,50 @@
             });
         }
 
+        function bindBtnUidAddGift() {
 
-                function bindBtnUidAddGift() {
             $('#btnUidAddGift').click(function () {
+                var checkID = []; // 定义空数组
+                $("input[name='select_gift_list']:checked").each(function (i) {
+                    checkID[i] = $(this).val();
+                });
+                console.log(checkID)
                 $.ajax({
                     url: "/operation/uid_add_gift/",
                     type: "post",
                     dataType: "json",
                     data: {
                         allNums: $("#allNums").val(),
-                        uid: $("#account_uid").text()
+                        uid: $("#account_uid").text(),
+                        giftList: checkID.toString()
+                    },
+                    success: function (res) {
+                        if (res.status) {
+                            alert("添加成功");
+                        } else {
+                            alert(res["res"]["msg"])
+                        }
+                    }
+                });
+            });
+        }
+
+        function bindBtnAddSelectGift() {
+            $('#btnAddSelectGift').click(function () {
+                var checkID = []; // 定义空数组
+                $("input[name='select_gift_list']:checked").each(function (i) {
+                    checkID[i] = $(this).val();
+                });
+                console.log(checkID)
+
+                $.ajax({
+                    url: "/operation/add_select_gift/",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        allNums: $("#allNums").val(),
+                        uid: $("#account_uid").text(),
+                        giftList: checkID.toString()
                     },
                     success: function (res) {
                         if (res.status) {

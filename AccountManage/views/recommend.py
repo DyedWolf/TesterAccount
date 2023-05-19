@@ -27,6 +27,7 @@ def add_recommend_room(request):
 
     sid = int(request.POST.get("sid"))
     ssid = int(request.POST.get("ssid"))
+    title = str(request.POST.get("title"))
     businessType = int(request.POST.get("businessType"))
     addId = str(sid) + "_" + str(ssid) + "_" + str(businessType)
 
@@ -36,7 +37,7 @@ def add_recommend_room(request):
         for result in results:
             # print(result)
             exitData.append(result["_id"])
-        print(exitData, addId)
+        print(exitData, addId, title)
 
         if addId not in exitData:
             print("插入数据")
@@ -59,7 +60,7 @@ def add_recommend_room(request):
                     "picture": "https://makefriends.bs2dl.yy.com/1679625466_8974eefad506b9a17b4a32c5885a3b38.jpg",
                     "pictureStatus": 2,
                     "pictureReason": "\u5185\u5ba1:2023.03.24 10:38",
-                    "title": "\u4e4c\u9e26\u5750\u98de\u673a~",
+                    "title": title,
                     "titleStatus": 2,
                     "titleReason": "",
                     "picture45": "",
@@ -103,7 +104,7 @@ def add_recommend_room(request):
                 "picture": "https://makefriends.bs2dl.yy.com/1679625466_8974eefad506b9a17b4a32c5885a3b38.jpg",
                 "pictureStatus": 2,
                 "pictureReason": "\u5185\u5ba1:2023.03.24 10:38",
-                "title": "\u4e4c\u9e26\u5750\u98de\u673a~",
+                "title": title,
                 "titleStatus": 2,
                 "titleReason": "",
                 "picture45": "",
@@ -139,6 +140,7 @@ def add_recommend_uid(request):
     mydb = client["fts_zhuiya_recommend_v2"]
     mycol = mydb["recommend_compere_picture_list"]
 
+    title = str(request.POST.get("title"))
     uid = int(request.POST.get("uid"))
     businessType = int(request.POST.get("businessType"))
     addId = str(uid) + "_" + str(businessType)
@@ -148,7 +150,7 @@ def add_recommend_uid(request):
     for result in results:
         # print(result)
         exitData.append(result["_id"])
-    print(exitData, addId)
+    print(exitData, addId, title)
 
     allData = {
         'businessType': businessType,
@@ -164,7 +166,7 @@ def add_recommend_uid(request):
         'picture': 'https://makefriends.bs2dl.yy.com/1662106385_84d5c31e95e671b73ad3be0599c2d09b.JPG',
         'pictureStatus': 2,
         'pictureReason': '内审:2022.09.02 16:13',
-        'title': '没想到吧~',
+        'title': title,
         'titleStatus': 2,
         'titleReason': '',
         'picture45': '',

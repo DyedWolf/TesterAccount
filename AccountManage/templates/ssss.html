@@ -22,5 +22,121 @@
     </div>
 </form>
 
+
+table {
+
+border-collapse: collapse;
+
+}
+
+td,th {
+
+width: 40px;
+
+height: 100px;
+
+border:1px solid #000;
+
+}
+
+table tbody tr:hover {
+
+background-color: red;
+
+}
+
+table tbody tr:not(:first-child):hover {background-color: #666;
+
+}
+
+td input[name='number']{
+
+width: 100px;
+
+}
+
+商品名单价购买数量
+
+香蕉100苹果100
+js:
+
+$(function(){
+
+//全选
+
+$("input[name='both']").click(function(){
+
+var $isSelected = $(this).is(":checked");
+
+for(var i = 0;i
+
+$("input[name='choice']")[i].checked = $isSelected;
+
+}
+
+})
+
+});
+
+// 输入正确，且有选中该行复选框才提交
+
+function checkShopping(){
+
+$("#msg").html('');
+
+var $checkbox = $("input[name='choice']");
+
+var reg = /^[1-9]\d*$/;
+
+var $number = "";
+
+var isInteger = false;//记录数字是否正确
+
+var moreOne = false;//选择复选框个数
+
+$checkbox.each(function(){
+
+if($(this).is(":checked")){
+
+$number = $(this).parent().prev().children().val();
+
+if(reg.test($number)){
+
+isInteger = true;
+
+moreOne = true;
+
+}else{
+
+$("#msg").html('提示：输入数量必须为正整数');
+
+isInteger = false;
+
+}
+
+}
+
+})
+
+if(isInteger && moreOne){
+
+return true;
+
+}else if(!moreOne){
+
+$("#msg").html('提示：至少选择一条信息');
+
+return false;
+
+}else{
+
+return false;
+
+}
+
+}
+
+
+
 </body>
 </html>

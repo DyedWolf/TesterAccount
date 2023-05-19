@@ -58,6 +58,8 @@ urlpatterns = [
     path('operation/add_all_balance/', operation.add_all_balance),
     # path('operation/add_all_gift/', operation.add_all_gift),
     path('operation/uid_add_gift/', operation.uid_add_gift),
+    path('operation/get_gift_list/', operation.get_gift_list),
+    path('operation/add_select_gift/', operation.add_select_gift),
 
     # 添加推荐uid和sid
     path('recommend/list/', recommend.recommend_list),
