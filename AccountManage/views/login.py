@@ -21,11 +21,12 @@ def login(request):
         #     return render(request, "login.html", {"form": form})
 
         tester_object = models.TesterInfo.objects.filter(**form.cleaned_data).first()
-        print(tester_object)
+        print("tester_object:{}".format(tester_object))
         if not tester_object:
             form.add_error("password", "用户名或密码错误")
             return render(request, "login.html", {"form": form})
         request.session["info"] = {"id": tester_object.id, "name": tester_object.tester_name}
+        print("登录者的信息：{}".format(request.session["info"]))
         request.session.set_expiry(60 * 60 * 24 * 7)
         if tester_object.id == 11:
             return redirect("/recommend/")

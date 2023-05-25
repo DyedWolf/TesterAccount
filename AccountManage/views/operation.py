@@ -10,13 +10,15 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http.response import JsonResponse, FileResponse
 
 from AccountManage import models
+from AccountManage.utils.pthread import MyThread
+from AccountManage.utils.excel_op import ExeclOp
 
 
 def operation_list(request, aid):
     print(aid)
     account_data = models.Account.objects.filter(id=aid).first()
     phone_data = models.HDID.objects.filter().values("id", "phone")
-    print(phone_data)
+    print("phone_data:{}".format(phone_data))
     result_data = {
         "account_data": account_data,
         "phone_data": phone_data
@@ -24,7 +26,7 @@ def operation_list(request, aid):
     return render(request, "operation_list.html", result_data)
 
 
-cookie = "hd_newui=0.3709373329860539; Hm_lvt_c493393610cdccbddc1f124d567e36ab=1683283379; hiido_ui=0.8475475681936762; _ga=GA1.2.1811866272.1683537797; ab_sr=1.0.1_Y2FkOTA5NzUzZTMzMTYzOWM5NjZiMzY5Njk2MTUwYzkzMjJkM2FiYWQ4YWY2ODJkNGIwZjIxZDJlNjkwNTJmNmU2ZjFhZDQxZTMxZWI0YjhlZWQ4M2JmY2E0YTFjZjg2OGIwODMxYmY0Yzc3YTU4MzZhM2UwMzdkN2Y1NzcxYmJiZTA3Yzg3NTZiNGJjZGI4ZDdhY2Y2MWFmNzU1Mzc5Zg==; udb_c=; yyuid=50047479; username=dw_wangchengqing; password=01B3085E325E6B5EA973041ABB0C14A31E99D810; osinfo=3A8103E9D3647D66A73D79D32FC105DDD4E2F573; udb_oar=6A8BA5FA78C047484697A34FD34F7C794193C9BE2040919A97E085CD86D30A06D847146012A2D05B82E33007A2441FF2EF24DE59FB27B7E8D48CAC29CFC6FC702A1B44E3E13E6AE3C21ADD0C4DE10E345E08167E10EEC2F87B333F4271B526FD6DE9B9DA78B0D4BC4B621287710E2D763D55BCBD28DBB3CE97A83D05DD108D0A24F0B85B796EE61285E1AB354735B5664F96EE56C675EDFC0044E1F2D2A2BC33DCFA8AE78F583071E0483D30C3F5B7558857BDB34C7DB9F9E1C8E196241B5B8216ECD3C33DC153A6296DDC7924C009F4AF3E4E3091AC6512CADA4A00AC28E71104CBA6F2013B6F691719FFA42855C9DB47B04DD12C1FA106DB6F79C20FF027B31A72DDF0BC38B564BC367C17C7D52CA201F1711FAEAB5A3B43D085F41470C8D9CCA38BE6663F2B6E4E91B7679EF0422C72DAD8E1D1EBF4E4A0033CAA22F1720E46B94B0056D46774C4F256AD09CEBF7DC91CFA3002A05F1172F69A77663B85A282A9E3998E42D5BCC820D27489E2C5E8C11A121AD8D6D09E830F16E02B849CC7"
+cookie = "hd_newui=0.3709373329860539; Hm_lvt_c493393610cdccbddc1f124d567e36ab=1683283379; hiido_ui=0.8475475681936762; _ga=GA1.2.1811866272.1683537797; udb_c=; yyuid=50047479; username=dw_wangchengqing; password=04C9A798E75CF23DD23A6FE98D7BA128C43D527E; osinfo=FD2BA0BB014E0B8C0836AFCFACF0B71611C50FE7; udb_oar=4FBE5B06543EC634B17B29E709CE1739562C1BA0FBC19EA6AD7D1AD8F91DD3E826906005DECA5FCB22F0F9797898158B27ACF5E0382E343D3F624756311461E80330031AC0A24CC59890FBEE506798E41D313A27FA51094F98BDA2DBE5029E156E4A9E29BF0378C596242D1A48FD4155703FB98A1AAABDC0485BCD795BE485C05C1F4194BD06C37043F435C8C9DAE15E0215089F3F20FB22124490B026D64CD6068395FCB4D285E7278032656352BEC5DB3F39B0297DCF8B6F6B6C77CA87E8BB80ED652077991FDF4C6BF0C91EEC586365B5D28EA0D2E7E0279307CE2631253E01E9E6F5F798C13F2693B9B446E697E54128285C48CE09BAC316A0D2F306EA5E336B42527896F98BD5E7CE662247D4CE2687115F4859ADE45000319984F5D0DFF5B301008217BDCBD45EADFAF1B5C8585FE76D68A9AE70C1A547C00703DC73167A7442BF3709EA09C2ABAD0F68E37CE182C70BEC773AA98242EFE3F18F4ABBBD0012EC9654136C6E5CCFF49AAD3BB38EE89B5C6D9335487CCB776332D9188038; ab_sr=1.0.1_MzYwNDUxMjZjNzY4Njg2MzY0ZmQ2YzAzMjZjZDYzYjNmZTBkY2Y2NDMzNDU2ODNkYzNjZWU4ZmMyNjcxNTAyNWEzZTczM2JmN2RjZTZmOGU5NGFkMjE2M2E5ODE4ZTBmMjY0ZWM1NzNiODRiNjg4ZmU3MmRlYjIyN2VjNDkyNTU3YjdlZTFkZWIwZGM5ODk2MDg3OGY3NDVhZTc0MzNjNg=="
 
 
 @csrf_exempt
@@ -290,7 +292,8 @@ def uid_add_gift(request):
         data = {"data": myresult, "uid": uid, "nums": nums}
         print(data)
     # 创建子线程
-    use_threading(data)
+    my_thread = MyThread()
+    my_thread.use_threading(data)
 
     result = {"status": True}
     return JsonResponse(result)
@@ -326,107 +329,8 @@ def schedule_operate(request):
     print(type(file_object))
     print(file_object, sname)
 
-    execl_op = Execl_Op(file_object, sname)
+    execl_op = ExeclOp(file_object, sname)
     execl_op.del_flsh_rows_cols([2, 5, 6, 7, 8, 9, 10, 11, 12, 13, 16, 17, 18, 19, 21, 26, 27, 28, 29, 30])
-
     execl_op.create_sheet()
 
     return render(request, "schedule.html")
-
-
-class Execl_Op:
-    # 绑定
-    def __init__(self, fname, sname):
-        self.fname = fname
-        self.wb = load_workbook(self.fname, data_only=True)
-        self.ws = self.wb[sname]
-
-    def del_flsh_rows_cols(self, cold):  # 基于文件名和表格名删除一些行和一些列
-        """基于文件名和表格名删除一些行和一些列
-        要删的行序数放在rowd表格中，要删的列序数放在cold表格中
-        本程序的关键是删除的行或列序数都必须是从大的开始删除，这样才不会乱序"""
-        # rowd = sorted(rowd, reverse=True)
-        cold = sorted(cold, reverse=True)
-        # for r in rowd:
-        #     ws.delete_rows(r)
-        for c in cold:
-            self.ws.delete_cols(c)
-        self.wb.save(self.fname)  # 记得要保存。
-
-    # 获取某列所有值
-    def get_col_value(self, column):
-        rows = self.ws.max_row
-        column_data = []
-        for i in range(1, rows + 1):
-            cell_value = self.ws.cell(row=i, column=column).value
-            column_data.append(cell_value)
-        return column_data
-
-    # 获取某行所有值
-    def get_row_value(self, row):
-        columns = self.ws.max_column
-        row_data = []
-        for i in range(1, columns + 1):
-            cell_value = self.ws.cell(row=row, column=i).value
-            row_data.append(cell_value)
-        return row_data
-
-    def create_sheet(self):
-
-        # 创建一个excel工作簿
-        wb = Workbook()
-
-        # 可以通过参数来指定sheet位置,0表示第一个
-        first_sheet = wb.create_sheet("Android分支测试进度", 0)
-
-        for i in range(1, 2):
-            first_sheet.append(self.get_row_value(1))
-
-        # sheet可以通过append来添加一行(row)
-        for i in range(2, self.get_col_value(11).index('iOS') + 1):
-            first_sheet.append(self.get_row_value(i))
-
-        first_sheet = wb.create_sheet("iOS分支测试进度", 1)
-
-        for i in range(1, 2):
-            first_sheet.append(self.get_row_value(1))
-
-        for i in range(self.get_col_value(11).index('iOS') + 1, self.get_col_value(11).index(None) + 1):
-            first_sheet.append(self.get_row_value(i))
-
-        wb.save('/TesterAccount/AccountManage/static/excel/schedule.xlsx')
-        wb.close()
-
-
-class my_Thread(threading.Thread):
-    def __init__(self, data=None):
-        threading.Thread.__init__(self)
-        self.add = data
-
-    # 重写run()方法
-    def run(self):
-        for arc in self.add["data"]:
-            # 调用 getName() 方法获取当前执行该程序的线程名
-            # print(threading.current_thread().getName() + " " + str(arc))
-            self.add_gift(uid=self.add["uid"], prop_id=arc[0], pricing_id=arc[1], nums=self.add["nums"])
-
-    def add_gift(self, uid, prop_id, pricing_id, nums):
-        url = "http://turnover-bg-test.yy.com/props/addProps/2"
-        data = {
-            "propId": prop_id,
-            "pricingId": pricing_id,
-            "uid": str(uid),
-            "nums": nums,
-            "countryCode": "cn"
-        }
-        response = requests.get(url=url, params=data)
-        print(response.text)
-
-
-def use_threading(data):
-    mythread = my_Thread(data)
-    # 启动子线程
-    mythread.start()
-    # 主线程执行此循环
-    for i in range(len(data["data"])):
-        print(threading.current_thread().getName())
