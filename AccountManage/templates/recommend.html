@@ -47,7 +47,7 @@
 </div>
 
 <div>
-       <div class="container" style="width: 1000px">
+    <div class="container" style="width: 1000px">
         <!--添加厅的推荐图和标题-->
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -136,71 +136,71 @@
 <script src="{% static 'plugins/bootstrap-3.4.1-dist/js/bootstrap.min.js' %}"></script>
 <script src="{% static 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"></script>
 <script>
-           $(function () {
-            bindBtnAddRecommendRoom();
-            bindBtnAddRecommendUid();
+    $(function () {
+        bindBtnAddRecommendRoom();
+        bindBtnAddRecommendUid();
+    });
+
+    function bindBtnAddRecommendUid() {
+        $("#btnAddRecommendUid").click(function () {
+
+            uid = $('#id_uid').val();
+
+            if (uid === "") {
+                alert("uid不能为空");
+            } else {
+                $.ajax({
+                    url: "/recommend/add_recommend_uid/",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        uid: $('#id_uid').val(),
+                        businessType: $("#id_businessType").val(),
+                    },
+                    success: function (res) {
+                        if (res.status) {
+                            alert("添加成功");
+                        }
+                        if (res.status === false) {
+                            alert(res.error);
+                        }
+                    }
+                });
+            }
         });
+    }
 
-        function bindBtnAddRecommendUid() {
-            $("#btnAddRecommendUid").click(function () {
 
-                uid = $('#id_uid').val();
+    function bindBtnAddRecommendRoom() {
+        $("#btnAddRecommendRoom").click(function () {
 
-                if (uid === "") {
-                    alert("uid不能为空");
-                } else {
-                    $.ajax({
-                        url: "/recommend/add_recommend_uid/",
-                        type: "post",
-                        dataType: "json",
-                        data: {
-                            uid: $('#id_uid').val(),
-                            businessType: $("#id_businessType").val(),
-                        },
-                        success: function (res) {
-                            if (res.status) {
-                                alert("添加成功");
-                            }
-                            if (res.status === false) {
-                                alert(res.error);
-                            }
+            sid = $('#id_sid').val();
+            ssid = $('#id_ssid').val();
+
+            if (sid === "" || ssid === "") {
+                alert("sid或ssid不能为空");
+            } else {
+                $.ajax({
+                    url: "/recommend/add_recommend_room/",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        sid: $('#id_sid').val(),
+                        ssid: $('#id_ssid').val(),
+                        businessType: $("#id_businessType").val(),
+                    },
+                    success: function (res) {
+                        if (res.status) {
+                            alert("添加成功");
                         }
-                    });
-                }
-            });
-        }
-
-
-        function bindBtnAddRecommendRoom() {
-            $("#btnAddRecommendRoom").click(function () {
-
-                sid = $('#id_sid').val();
-                ssid = $('#id_ssid').val();
-
-                if (sid === "" || ssid === "") {
-                    alert("sid或ssid不能为空");
-                } else {
-                    $.ajax({
-                        url: "/recommend/add_recommend_room/",
-                        type: "post",
-                        dataType: "json",
-                        data: {
-                            sid: $('#id_sid').val(),
-                            ssid: $('#id_ssid').val(),
-                            businessType: $("#id_businessType").val(),
-                        },
-                        success: function (res) {
-                            if (res.status) {
-                                alert("添加成功");
-                            }
-                            if (res.status === false) {
-                                alert(res.error);
-                            }
+                        if (res.status === false) {
+                            alert(res.error);
                         }
-                    });
-                }
-            });
-        }
+                    }
+                });
+            }
+        });
+    }
 </script>
 
 

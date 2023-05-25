@@ -231,7 +231,9 @@ def download_excel(request):
     return r
 
 
+@csrf_exempt
 def download_schedule(request):
+    """ 下载分支测试 """
     file_path = r"AccountManage/static/excel/schedule.xlsx"
     f = open(file_path, "rb")
     r = FileResponse(f, as_attachment=True, filename="schedule.xlsx")

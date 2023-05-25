@@ -19,6 +19,7 @@ def recommend(request):
 s = "mongodb://fts_mgo4_test2:de5HTRXfRXm0lncRA1eRKJE5@10.12.36.22:10011,10.26.130.24:10007,10.26.2.210:10007/fts_zhuiya_recommend_v2?replicaSet=ftsmgo4test21"
 a = "mongodb://125.94.237.198:19999/fts_zhuiya_recommend_v2"
 
+
 @csrf_exempt
 def add_recommend_room(request):
     client = pymongo.MongoClient("mongodb://fts_mgo4_test2:de5HTRXfRXm0lncRA1eRKJE5@10.12.36.22:10011,10.26.130.24:10007,10.26.2.210:10007/fts_zhuiya_recommend_v2?replicaSet=ftsmgo4test21")

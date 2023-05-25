@@ -328,9 +328,11 @@ def schedule_operate(request):
     sname = request.POST.get("sheetName")
     print(type(file_object))
     print(file_object, sname)
+    if file_object:
+        execl_op = ExeclOp(file_object, sname)
+        execl_op.del_flsh_rows_cols([2, 5, 6, 7, 8, 9, 10, 11, 12, 13, 16, 17, 18, 19, 21, 26, 27, 28, 29, 30])
+        execl_op.create_sheet()
 
-    execl_op = ExeclOp(file_object, sname)
-    execl_op.del_flsh_rows_cols([2, 5, 6, 7, 8, 9, 10, 11, 12, 13, 16, 17, 18, 19, 21, 26, 27, 28, 29, 30])
-    execl_op.create_sheet()
-
-    return render(request, "schedule.html")
+        return render(request, "schedule.html")
+    result = {"status": False, "error": "未上传excel"}
+    return JsonResponse(result)
