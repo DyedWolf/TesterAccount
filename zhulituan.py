@@ -68,6 +68,6 @@ if __name__ == "__main__":
         "ssid": "2807602905"
     }
 
-    room_data = get_hit_rule(data5)
+    room_data = get_hit_rule(data4)
     print(room_data)
     clear_cache(room_data)

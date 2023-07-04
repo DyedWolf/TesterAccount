@@ -39,3 +39,7 @@ def logout(request):
     """ 注销 """
     request.session.clear()
     return redirect('/login/')
+
+
+def try_loading(request):
+    return render(request, "try_loading.html")

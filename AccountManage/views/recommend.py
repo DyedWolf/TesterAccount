@@ -1,4 +1,4 @@
-import requests, json, pymongo
+import pymongo
 
 from django.db import connection
 from django.shortcuts import HttpResponse, render, redirect
