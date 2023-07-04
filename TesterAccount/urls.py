@@ -27,6 +27,7 @@ urlpatterns = [
     # 登录
     path('login/', login.login),
     path('logout/', login.logout),
+    path('try_loading/', login.try_loading),
 
     # 我的信息
     path('my_information/', information.my_information),
