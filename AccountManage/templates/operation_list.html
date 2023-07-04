@@ -302,6 +302,25 @@
             </div>
         </div>
 
+        <!--清除进频道记录-->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">清除测试环境的进频道记录</h3>
+            </div>
+            <div class="panel-body">
+                <form method="post" novalidate="">
+
+                    <div class="form-group">
+                        <label>清除测试环境的进频道记录的UID : </label>
+                        <a type="text" class="form-control">{{ account_data.account_uid }}</a>
+                    </div>
+
+                    <button type="button" id="btnCleanRoomCache" class="btn btn-primary">确认</button>
+                </form>
+            </div>
+        </div>
+
+
         <!--批量给uid添加货币-->
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -406,6 +425,7 @@
             bindGetGiftList();
             bindBtnAddSelectGift();
             bindSearchGiftList();
+            bindBtnCleanRoomCache();
         });
 
         function bindBtnOptionTest() {
@@ -589,6 +609,27 @@
                 });
             });
         }
+
+        function bindBtnCleanRoomCache() {
+            $("#btnCleanRoomCache").click(function () {
+                $.ajax({
+                    url: "/operation/clean_room_cache/",
+                    dataType: 'json',
+                    type: 'post',
+                    data: {
+                        uid: $("#account_uid").text()
+                    },
+                    success: function (res) {
+                        if (res.status === 0) {
+                            alert("清除成功");
+                        } else {
+                            alert(res.error)
+                        }
+                    }
+                });
+            });
+        }
+
 
         function bindBtnAddAllBalance() {
             $('#btnAddAllBalance').click(function () {

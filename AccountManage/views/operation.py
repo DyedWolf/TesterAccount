@@ -1,4 +1,4 @@
-import time
+import time, re
 
 import requests, json, mysql.connector
 
@@ -205,6 +205,7 @@ def reset_sign_log(request):
 
 @csrf_exempt
 def add_all_balance(request):
+    """ 批量加货币 """
     account_belong_id = request.POST.get("account_belong_id")
     all_qute = request.POST.get("allQute")
     all_coin = request.POST.get("allCoin")
@@ -258,6 +259,7 @@ def add_select_gift(request):
 
 @csrf_exempt
 def uid_add_gift(request):
+    """ 给uid添加包裹礼物 """
     nums = request.POST.get("allNums")
     uid = request.POST.get("uid")
     gift_list = request.POST.get("giftList")
@@ -301,6 +303,7 @@ def uid_add_gift(request):
 
 
 def get_gift_list(request):
+    """ 获取礼物列表 """
     mydb = mysql.connector.connect(
         host="125.94.240.75",  # 数据库主机地址
         port=8066,
@@ -318,7 +321,8 @@ def get_gift_list(request):
             status = data[i]
     print("status: {}".format(status))
     mycursor.execute(
-        "SELECT a.id,b.pricing_id,a.name FROM tb_to_props_meta a  JOIN tb_to_props_consume_rec b  ON b.prop_id=a.id WHERE a.app_id={} AND b.currency_type={} GROUP BY b.prop_id".format(status[0], status[1]))
+        "SELECT a.id,b.pricing_id,a.name FROM tb_to_props_meta a  JOIN tb_to_props_consume_rec b  ON b.prop_id=a.id WHERE a.app_id={} AND b.currency_type={} GROUP BY b.prop_id".format(
+            status[0], status[1]))
 
     myresult = mycursor.fetchall()  # fetchall() 获取所有记录
 
@@ -332,6 +336,7 @@ def schedule(request):
 
 @csrf_exempt
 def schedule_operate(request):
+    """ 操作excel """
     file_object = request.FILES.get("excSchedule")
     sname = request.POST.get("sheetName")
     print(type(file_object))
@@ -344,3 +349,54 @@ def schedule_operate(request):
         return render(request, "schedule.html")
     result = {"status": False, "error": "未上传excel"}
     return JsonResponse(result)
+
+
+def get_hit_rule(user_data):
+    url = "https://zhuiya-test.yy.com/admin-web/robot/public/getHitRule"
+    data = {
+        "uid": user_data["uid"]
+    }
+    res = requests.get(url=url, params=data)
+    data = json.loads(res.text)["data"]
+    match_obj = re.match(r'(.*)uidEnterFirst:(.*?)\\n.*', str(data), re.M | re.I)
+    print(match_obj)
+    if match_obj:
+        room_data = match_obj.group(2).split("/")
+        room_data.append(user_data["uid"])
+        return room_data
+    else:
+        print("No match!!")
+
+
+@csrf_exempt
+def clean_room_cache(request):
+    """ 清除进频道记录"""
+    uid = int(request.POST.get("uid"))
+    url = "https://zhuiya-test.yy.com/admin-web/robot/public/getHitRule"
+    data = {
+        "uid": uid
+    }
+    res = requests.get(url=url, params=data)
+    data = json.loads(res.text)["data"]
+    print("清除进频道记录的data:{}".format(res.text))
+    match_obj = re.match(r'(.*)uidEnterFirst:(.*?)\\n.*', str(data), re.M | re.I)
+    print("清除进频道记录的match_obj:{}".format(match_obj))
+
+    room_data = match_obj.group(2).split("/")
+    print("清除进频道记录的room_data:{}".format(room_data))
+    if "null" not in room_data:
+        url = "https://zhuiya-test.yy.com/admin-web/robot/public/clearCache"
+        data = {
+            "uid": uid,
+            "sid": room_data[0],
+            "ssid": room_data[1]
+        }
+        res = requests.get(url=url, params=data)
+        print("清除进频道记录的res.text:{}".format(res.text))
+        print("清除进频道记录的res.url:{}".format(res.url))
+        return JsonResponse(json.loads(res.content))
+
+    else:
+        result = {"status": False, "error": "获取不到进频道记录"}
+        return JsonResponse(result)
+
