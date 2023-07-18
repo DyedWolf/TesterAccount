@@ -72,11 +72,19 @@
                         <td>{{ item.account_pwd }}</td>
                         <td>{{ item.account_remarks }}</td>
                         <td>
-                            <a href="/operation/{{ item.id }}">
-                                <input type="button" class="btn btn-primary btn-xs" value="账号操作页入口">
-                            </a>
+                            <input aid="{{ item.id }}" uid={{ item.account_uid }} type="button"
+                                   class="btn btn-primary btn-xs btn-setNewAccount" value="设置新账号">
+                            <input aid="{{ item.id }}" uid={{ item.account_uid }} type="button"
+                                   class="btn btn-primary btn-xs btn-cleanSign" value="清除签到记录">
+                            <input aid="{{ item.id }}" uid={{ item.account_uid }} type="button"
+                                   class="btn btn-primary btn-xs btn-resetNoble" value="清重置超神贵族">
 
-                            <input aid="{{ item.id }}" type="button" class="btn btn-info btn-primary btn-xs btn-edit" value="修改">
+{#                            <a href="/operation/{{ item.id }}">#}
+{#                                <input type="button" class="btn btn-primary btn-xs" value="账号操作页入口">#}
+{#                            </a>#}
+
+                            <input aid="{{ item.id }}" type="button" class="btn btn-info btn-primary btn-xs btn-edit"
+                                   value="修改">
                             <input aid="{{ item.id }}" class="btn btn-danger btn-xs btn-delete" type="button"
                                    value="删除">
                         </td>
@@ -181,6 +189,146 @@
         </div>
     </div>
 
+    <!--新建对话框, 设置新用户-->
+    <div class="modal fade" id="setNewAccountModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="setNewAccountModalLabel">设置新用户</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form method="post" novalidate="">
+
+                        <div class="form-group">
+                            <label>设置新账号的UID : </label>
+                            <a id="setNewAccountUid" type="text" class="form-control"></a>
+                        </div>
+                        <div class="form-group">
+                            <label>测试机的HDID : </label>
+                            <!--<input type="text" class="form-control" value="" placeholder="测试机的HDID" required="" id="hdid">-->
+                            <select name="hd_id" class="form-control" placeholder="测试设备" required id="hd_id">
+                                <div class="modal-body">
+
+                                    <form id="formAdd">
+                                        <div class="clearfix">
+
+                                            {% for field in phone_data %}
+                                                <div class="col-xs-6">
+                                                    <div id="formGroup" class="form-group"
+                                                         style="position: relative;margin-bottom: 20px;">
+                                                        <option value="{{ field.id }}">  {{ field.phone }}</option>
+                                                        <span class="error-msg"
+                                                              style="color: red;position: absolute;"></span>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>新账号登录的APP : </label>
+                            <select name="app" class="form-control" required="" id="app">
+                                <option value="Yomi" selected="">Yo语音</option>
+                                <option value="zhuiwan">Yo交友</option>
+                                <option value="YaYa">YaYa</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>正式/测试环境选择 : </label>
+                            <select name="env" class="form-control" required="" id="env">
+                                <option value="official">正式环境</option>
+                                <option value="test">测试环境</option>
+                            </select>
+                        </div>
+                        {#                    <div class="form-group">#}
+                        {#                        <label>交友boss后台的cookie : </label>#}
+                        {#                        <input type="text" class="form-control" id="webCookie" placeholder="交友boss后台的cookie" required="">#}
+                        {##}
+                        {#                    </div>#}
+
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                    <button id="btnSetNEwAccountSave" type="button" class="btn btn-primary">保 存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--新建对话框, 重置超神贵族-->
+    <div class="modal fade" id="resetNobleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+
+            <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                <h4>是否确定重置？</h4>
+                <p>重置的uid：</p>
+                <a type="text" id="resetNobleUid" value=""></a>
+                <p style="margin: 10px 0;"> 重置后，此UID会重置为非超神贵族。</p>
+                <p style="text-align: right;">
+                    <button id="btnResetNoble" type="button" class="btn btn-danger">确 定</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <!--新建对话框, 清除签到记录-->
+    <div class="modal fade" id="cleanSignModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="setNewAccountModalLabel">设置新用户</h4>
+                </div>
+                <div class="modal-body">
+
+                   <form method="post" novalidate="">
+
+                    <div class="form-group">
+                        <label>已签到的UID : </label>
+                        <a type="text" id="cleanSignUid" class="form-control"></a>
+                    </div>
+
+                    <div class="form-group">
+                        <label>删除签到的日期：</label>
+                        <input type="date" class="form-control" name="dateSign" id="dateSign"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label>已签到的APP : </label>
+                        <select name="appSign" class="form-control" required="" id="appSign">
+                            <option value="Yomi">Yo语音</option>
+                            <option value="zhuiwan">Yo交友</option>
+                            <option value="YaYa">YaYa</option>
+                        </select>
+                    </div>
+
+
+                </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                    <button id="btnSaveCleanSign" type="button" class="btn btn-primary">保 存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
     <!-- 删除（对话框） -->
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -207,6 +355,7 @@
     <script type="text/javascript">
         var EDIT_ID;
         var DELETE_ID;
+        var UID
 
         $(function () {
             bindBtnAddEvent(); // 点击展开添加窗口
@@ -215,7 +364,130 @@
             bindBtnConfirmDeleteEvent(); // 点击确认删除
             bindBtnEditEvent();  // 点击编辑展开半窗
             bindBtnShowUpload(); // 点击展开批量上传半窗
+            bindBtnShowSetNewAccount(); // 点击展开设置新账号窗口
+            bindBtnNewAccount(); // 请求设置新账号接口
+            bindBtnShowResetNoble(); // 点击展开确认设置超神贵族窗口
+            bindBtnResetNoble(); // 请求重置超神贵族接口
+            bindBtnShowCleanSign(); // 点击展开清除签到弹窗
+            bindBtnCleanSign(); // 请求清除签到记录接口
         });
+
+
+        function bindBtnCleanSign() {
+            $("#btnSaveCleanSign").click(function () {
+                $.ajax({
+                    url: '/operation/reset_sign_log/',
+                    dataType: 'json',
+                    type: 'POST',
+                    data: {
+                        app: $('#appSign').val(),
+                        uid: $('#account_uid').text(),
+                        date: $('#dateSign').val()
+                    },
+
+                    success: function (res) {
+                        console.log(res.result)
+                        console.log(res)
+                        console.log(res.error)
+                        if (res.result === 0) {
+
+                            alert("重置成功");
+                        } else {
+                            alert(res.error)
+                        }
+                    }
+                });
+            });
+        }
+
+        function bindBtnResetNoble() {
+            $("#btnResetNoble").click(function () {
+                UID = $(this).attr('uid');
+
+                $.ajax({
+                    url: "/operation/reset_noble/",
+                    dataType: 'json',
+                    type: 'post',
+                    data: {
+                        uid: $("#resetNobleUid").text()
+                    },
+                    success: function (res) {
+                        if (res.status === 0) {
+                            alert("重置成功");
+                        } else {
+                            alert(res.error)
+                        }
+                    }
+                });
+            });
+        }
+
+        function bindBtnShowCleanSign() {
+            $(".btn-cleanSign").click(function () {
+                // 获取uid
+                UID = $(this).attr('uid');
+                // 设置弹窗uid
+                $("#cleanSignUid").text(UID);
+                // 设置时间为当天
+                $("#dateSign").val(new Date().toISOString().substring(0, 10));
+                // 点击按钮，显示对话框。
+                $("#cleanSignModal").modal("show");
+            });
+        }
+
+        function bindBtnShowResetNoble() {
+            $(".btn-resetNoble").click(function () {
+                // 获取uid
+                UID = $(this).attr('uid');
+                // 设置弹窗uid
+                $("#resetNobleUid").text(UID);
+
+                // 点击按钮，显示对话框。
+                $("#resetNobleModal").modal("show");
+            });
+        }
+
+        function bindBtnNewAccount() {
+            $("#btnSetNEwAccountSave").click(function () {
+                var hdid;
+                hdid = $("#hdid").val();
+                console.log(hdid)
+                $.ajax({
+                    url: "/operation/newacc/",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        app: $('#app').val(),
+                        uid: $("#setNewAccountUid").text(),
+                        {#hdid: $("#hdid").val()#}
+                        hdid: $("#hd_id").val(),
+                        env: $("#env").val(),
+                        webCookie: $("#webCookie").val()
+                    },
+                    success: function (res) {
+                        if (res.result === 0) {
+                            alert(res["msg"]);
+                        }
+                        if (res.result !== 0) {
+                            alert(res["msg"]);
+                        }
+                    }
+                });
+            });
+        }
+
+        function bindBtnShowSetNewAccount() {
+            $(".btn-setNewAccount").click(function () {
+                // 获取uid
+                UID = $(this).attr('uid');
+                // 设置弹窗uid
+                $("#setNewAccountUid").text(UID);
+
+                // 点击新建按钮，显示对话框。
+                $("#setNewAccountModal").modal("show");
+            });
+
+        }
 
         function bindBtnShowUpload() {
             $('#btnFile').click(function () {

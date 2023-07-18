@@ -1,0 +1,286 @@
+{% extends 'layout.html' %}
+
+{% block css %}
+    <style>
+
+        section {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 33.3%;
+            min-width: 100px;
+            height: 100px;
+        }
+
+
+        .loader-2 {
+            display: block;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #ff3d00;
+            box-shadow: 0px -24px #333333, 0px 24px #333333;
+            animation: rotate 2s ease-in-out infinite;
+        }
+
+        @keyframes shadowExpandX {
+            0% {
+                box-shadow: 0 0, 0 0;
+                color: rgba(255, 255, 255, 0.2);
+            }
+
+            100% {
+                box-shadow: -24px 0px, 24px 0px;
+                color: rgba(255, 255, 255, 0.8);
+            }
+        }
+
+
+        @keyframes rotate {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes shadowColor {
+            0% {
+                box-shadow: -24px 0px #ff3d00, 24px 0px #fff;
+            }
+
+            50% {
+                background: #ff3d00;
+            }
+
+            100% {
+                box-shadow: -24px 0px #fff, 24px 0px #ff3d00;
+            }
+        }
+
+        @keyframes shadowScale {
+            0% {
+                box-shadow: -48px 0px 0px 4px, -16px 0px, 16px 0px, 48px 0px;
+            }
+
+            33% {
+                box-shadow: -48px 0px, -16px 0px 0px 4px, 16px 0px, 48px 0px;
+            }
+
+            66% {
+                box-shadow: -48px 0px, -16px 0px, 16px 0px 0px 4px, 48px 0px;
+            }
+
+            100% {
+                box-shadow: -48px 0px, -16px 0px, 16px 0px, 48px 0px 0px 4px;
+            }
+        }
+
+        @keyframes shadowJump {
+            0% {
+                box-shadow: -48px -12px, -16px 0px, 16px 0px, 48px 0px;
+            }
+
+            33% {
+                box-shadow: -48px 0px, -16px -12px, 16px 0px, 48px 0px;
+            }
+
+            66% {
+                box-shadow: -48px 0px, -16px 0px, 16px -12px, 48px 0px;
+            }
+
+            100% {
+                box-shadow: -48px 0px, -16px 0px, 16px 0px, 48px -12px;
+            }
+        }
+
+        @keyframes shadowRolling {
+            0% {
+                box-shadow: 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0);
+            }
+
+            12% {
+                box-shadow: 100px 0 white, 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0);
+            }
+
+            25% {
+                box-shadow: 110px 0 white, 100px 0 white, 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0);
+            }
+
+            36% {
+                box-shadow: 120px 0 white, 110px 0 white, 100px 0 white, 0px 0 rgba(255, 255, 255, 0);
+            }
+
+            50% {
+                box-shadow: 130px 0 white, 120px 0 white, 110px 0 white, 100px 0 white;
+            }
+
+            62% {
+                box-shadow: 200px 0 rgba(255, 255, 255, 0), 130px 0 white, 120px 0 white, 110px 0 white;
+            }
+
+            75% {
+                box-shadow: 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 130px 0 white, 120px 0 white;
+            }
+
+            87% {
+                box-shadow: 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 130px 0 white;
+            }
+
+            100% {
+                box-shadow: 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0);
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container" style="width: 1000px">
+        <!--一个uid添加不同礼物-->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">一个uid添加不同礼物</h3>
+            </div>
+            <div class="panel-body">
+                <form method="post" novalidate="">
+                    <div class="form-group">
+                        <label>添加包裹礼物的账号UID : </label>
+                        <select name="addGiftUid" class="form-control" placeholder="添加包裹礼物的账号UID" required id="addGiftUid">
+                        <div class="modal-body">
+
+                                    <form id="formAdd">
+                                        <div class="clearfix">
+
+                                            {% for field in account_data %}
+                                                <div class="col-xs-6">
+                                                    <div id="formGroup" class="form-group"
+                                                         style="position: relative;margin-bottom: 20px;">
+                                                        <option value="{{ field.account_uid }}">  {{ field.account_card }}</option>
+                                                        <span class="error-msg"
+                                                              style="color: red;position: absolute;"></span>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+
+                                        </div>
+                                    </form>
+
+                                </div>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>需要添加什么业务的包裹礼物 : </label>
+                        <select name="idBusiness" class="form-control" required="" id="idBusiness">
+                            <option value="2">交友房</option>
+                            <option value="34">语音房</option>
+                            <option value="36">宝贝房</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>包裹礼物数量 : </label>
+                        <input type="text" class="form-control" value="" placeholder="包裹礼物数量" required="" id="allNums">
+                    </div>
+                    <div class="form-group">
+                        <button type="button" id="btnUidAddGift" class="btn btn-primary">添加礼物到包裹</button>
+                        <h6 style="color: red;">勾选了礼物就添加勾选的礼物到包裹，未勾选就全部添加到包裹</h6>
+                    </div>
+                    <div class="form-group">
+
+                        <label>包裹礼物列表 : </label>
+                        <div id="giftList">
+
+                        </div>
+                        <div class="form-group" id="devLoading" style="display: block">
+                            <label>数据加载中，稍等一下</label>
+                            <section><span class="loader-2"></span></section>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+
+    <script type="text/javascript">
+        $(function () {
+
+            bindSearchGiftList();
+            bindBtnUidAddGift();
+            bindGetGiftList();
+
+        });
+
+        function bindSearchGiftList() {
+            $("#idBusiness").click(function () {
+                $("#giftList").empty();
+                var loading = document.getElementById("devLoading");
+                loading.style.display = "block";
+
+                var business = $("#idBusiness").val();
+                console.log("business:" + business)
+                if (business != null) {
+                    bindGetGiftList();
+                }
+            });
+        }
+
+
+        function bindGetGiftList() {
+            $.ajax({
+                url: '/batch/get_gift_list/',
+                dataType: 'json',
+                type: 'get',
+                data: {
+                    business: $("#idBusiness").val()
+                },
+                success: function (res) {
+                    console.log("礼物数据:" + res.data)
+
+                    if (res.status) {
+                        $.each(res.data, function (name, value) {
+                            var input = "<div>";
+                            input += "<input type='checkbox' style='margin: 5px;' name='select_gift_list' value=\"" + value[1] + "\"";
+                            input += ">" + "道具id:" + value[0] + "\n" + "费用id:" + value[1] + "\n" + "礼物名称:" + value[2] + "\n" + "</option>"; //动态添加数据
+                            input += "</div>"
+                            $('#giftList').append(input);
+                        });
+                    }
+                    var loading = document.getElementById("devLoading");
+                    loading.style.display = "none";
+                }
+            });
+
+        }
+
+        function bindBtnUidAddGift() {
+
+            $('#btnUidAddGift').click(function () {
+                var checkID = []; // 定义空数组
+                $("input[name='select_gift_list']:checked").each(function (i) {
+                    checkID[i] = $(this).val();
+                });
+                console.log(checkID)
+                $.ajax({
+                    url: "/batch/uid_add_gift/",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        business: $("#idBusiness").val(),
+                        allNums: $("#allNums").val(),
+                        uid: $("#addGiftUid").val(),
+                        giftList: checkID.toString()
+                    },
+                    success: function (res) {
+                        if (res.status) {
+                            alert("添加成功");
+                        } else {
+                            alert(res["res"]["msg"])
+                        }
+                    }
+                });
+            });
+        }
+    </script>
+{% endblock %}

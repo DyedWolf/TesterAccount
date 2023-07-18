@@ -184,124 +184,6 @@
         </div>
 
 
-        <!--设置新用户-->
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">设置新账号</h3>
-            </div>
-            <div class="panel-body">
-                <form method="post" novalidate="">
-
-                    <div class="form-group">
-                        <label>设置新账号的UID : </label>
-                        <a type="text" class="form-control">{{ account_data.account_uid }}</a>
-                    </div>
-                    <div class="form-group">
-                        <label>测试机的HDID : </label>
-                        <!--<input type="text" class="form-control" value="" placeholder="测试机的HDID" required="" id="hdid">-->
-                        <select name="hd_id" class="form-control" placeholder="测试设备" required id="hd_id">
-                            <div class="modal-body">
-
-                                <form id="formAdd">
-                                    <div class="clearfix">
-
-                                        {% for field in phone_data %}
-                                            <div class="col-xs-6">
-                                                <div id="formGroup" class="form-group"
-                                                     style="position: relative;margin-bottom: 20px;">
-                                                    <option value="{{ field.id }}">  {{ field.phone }}</option>
-                                                    <span class="error-msg"
-                                                          style="color: red;position: absolute;"></span>
-                                                </div>
-                                            </div>
-                                        {% endfor %}
-
-                                    </div>
-                                </form>
-
-                            </div>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>新账号登录的APP : </label>
-                        <select name="app" class="form-control" required="" id="app">
-                            <option value="Yomi" selected="">Yo语音</option>
-                            <option value="zhuiwan">Yo交友</option>
-                            <option value="YaYa">YaYa</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>正式/测试环境选择 : </label>
-                        <select name="env" class="form-control" required="" id="env">
-                            <option value="official">正式环境</option>
-                            <option value="test">测试环境</option>
-                        </select>
-                    </div>
-                    {#                    <div class="form-group">#}
-                    {#                        <label>交友boss后台的cookie : </label>#}
-                    {#                        <input type="text" class="form-control" id="webCookie" placeholder="交友boss后台的cookie" required="">#}
-                    {##}
-                    {#                    </div>#}
-
-                    <button type="button" id="btnNewAccount" class="btn btn-primary">确认</button>
-                </form>
-            </div>
-        </div>
-
-
-        <!--删除签到记录-->
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">删除测试环境的签到记录</h3>
-            </div>
-            <div class="panel-body">
-                <form method="post" novalidate="">
-
-                    <div class="form-group">
-                        <label>已签到的UID : </label>
-                        <a type="text" class="form-control">{{ account_data.account_uid }}</a>
-                    </div>
-
-                    <div class="form-group">
-                        <label>删除签到的日期：</label>
-                        <input type="date" class="form-control" name="dateSign" id="dateSign"/>
-                    </div>
-
-                    <div class="form-group">
-                        <label>已签到的APP : </label>
-                        <select name="appSign" class="form-control" required="" id="appSign">
-                            <option value="Yomi">Yo语音</option>
-                            <option value="zhuiwan">Yo交友</option>
-                            <option value="YaYa">YaYa</option>
-                        </select>
-                    </div>
-
-                    <button type="button" id="btnSignAccount" class="btn btn-primary">确认</button>
-                </form>
-            </div>
-        </div>
-
-
-        <!--重置超神贵族等级-->
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">重置测试环境的超神贵族等级</h3>
-            </div>
-            <div class="panel-body">
-                <form method="post" novalidate="">
-
-                    <div class="form-group">
-                        <label>重置超神贵族等级的UID : </label>
-                        <a type="text" class="form-control">{{ account_data.account_uid }}</a>
-                    </div>
-
-                    <button type="button" id="btnResetNoble" class="btn btn-primary">确认</button>
-                </form>
-            </div>
-        </div>
-
         <!--清除进频道记录-->
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -410,14 +292,12 @@
 {% block js %}
     <script type="text/javascript">
 
-        document.getElementById("dateSign").value = new Date().toISOString().substring(0, 10);
 
         $(function () {
             bindBtnNewAccount();
             bindBtnAddBalance();
             bindBtnSearchBalance();
             bindBtnResetNoble();
-            bindBtnResetSignLog();
             bindBtnOptionTest();
             bindBtnAddAllBalance();
             bindBtnAddAllGift();
@@ -482,38 +362,11 @@
                 $("#giftList").empty();
                 var loading = document.getElementById("devLoading");
                 loading.style.display = "block";
+
                 bindGetGiftList();
             });
         }
 
-        function bindBtnNewAccount() {
-            $("#btnNewAccount").click(function () {
-                var hdid;
-                hdid = $("#hdid").val();
-                console.log(hdid)
-                $.ajax({
-                    url: "/operation/newacc/",
-                    type: "post",
-                    dataType: "json",
-                    data: {
-                        app: $('#app').val(),
-                        uid: $("#account_uid").text(),
-                        {#hdid: $("#hdid").val()#}
-                        hdid: $("#hd_id").val(),
-                        env: $("#env").val(),
-                        webCookie: $("#webCookie").val()
-                    },
-                    success: function (res) {
-                        if (res.result === 0) {
-                            alert(res["msg"]);
-                        }
-                        if (res.result !== 0) {
-                            alert(res["msg"]);
-                        }
-                    }
-                });
-            });
-        }
 
         function bindBtnAddBalance() {
             $('#btnAddBalance').click(function () {
@@ -560,55 +413,7 @@
             });
         }
 
-        function bindBtnResetSignLog() {
 
-            console.log($('#dateSign').val());
-            $("#btnSignAccount").click(function () {
-
-                $.ajax({
-                    url: '/operation/reset_sign_log/',
-                    dataType: 'json',
-                    type: 'POST',
-                    data: {
-                        app: $('#appSign').val(),
-                        uid: $('#account_uid').text(),
-                        date: $('#dateSign').val()
-                    },
-
-                    success: function (res) {
-                        console.log(res.result)
-                        console.log(res)
-                        console.log(res.error)
-                        if (res.result === 0) {
-
-                            alert("重置成功");
-                        } else {
-                            alert(res.error)
-                        }
-                    }
-                });
-            });
-        }
-
-        function bindBtnResetNoble() {
-            $("#btnResetNoble").click(function () {
-                $.ajax({
-                    url: "/operation/reset_noble/",
-                    dataType: 'json',
-                    type: 'post',
-                    data: {
-                        uid: $("#account_uid").text()
-                    },
-                    success: function (res) {
-                        if (res.status === 0) {
-                            alert("重置成功");
-                        } else {
-                            alert(res.error)
-                        }
-                    }
-                });
-            });
-        }
 
         function bindBtnCleanRoomCache() {
             $("#btnCleanRoomCache").click(function () {
@@ -700,6 +505,7 @@
                     type: "post",
                     dataType: "json",
                     data: {
+                        business: $("#idBusiness").val(),
                         allNums: $("#allNums").val(),
                         uid: $("#account_uid").text(),
                         giftList: checkID.toString()

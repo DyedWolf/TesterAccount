@@ -23,6 +23,8 @@ def account_list(request):
         search_id = request.GET.get("idSearch", "")
         print(txt_search)
         print(search_id)
+        phone_data = models.HDID.objects.filter().values("id", "phone")
+        print("phone_data:{}".format(phone_data))
 
         with connection.cursor() as cursor:
             if search_id == 'YY' and txt_search:
@@ -50,6 +52,7 @@ def account_list(request):
         page_queryset = page_object.page_queryset
         page_string = page_object.html()
         context = {
+            "phone_data": phone_data,
             "form": form,
             "form_list": form_list,
             "form_data": page_queryset,
@@ -58,7 +61,9 @@ def account_list(request):
             "search_id": search_id
         }
         # print(context["form_list"])
-        return render(request, "account_list.html", context)
+        # return render(request, "account_list.html", context)
+
+        return render(request, "account_newList.html", context)
 
 
 @csrf_exempt
@@ -184,7 +189,7 @@ def account_option(request):
         sql_data = cursor.fetchall()  # 获取一条数据, 使用fetchone()
         # colums = [col[0] for col in cursor.description]
         # sql_data = [dict(zip(colums, row)) for row in sql_data]
-    print(sql_data)
+    print("sql_data:{}".format(sql_data))
     result = {"status": True, "data": sql_data}
     return JsonResponse(result)
 

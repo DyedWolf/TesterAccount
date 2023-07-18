@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from AccountManage.views import tester, login, account, operation, hdid, information, recommend
+from AccountManage.views import tester, login, account, operation, hdid, information, recommend, batch
 from Friday.views import friday
 
 
@@ -51,6 +51,7 @@ urlpatterns = [
 
     # 测试账号操作
     path('operation/<int:aid>', operation.operation_list),
+    path('operation/list/', operation.operation_list),
     path('operation/newacc/', operation.operation_new_account),
     path('operation/addmoney/', operation.operation_balance),
     path('operation/search_balance/', operation.search_balance),
@@ -68,6 +69,11 @@ urlpatterns = [
     path('recommend/', recommend.recommend),
     path('recommend/add_recommend_room/', recommend.add_recommend_room),
     path('recommend/add_recommend_uid/', recommend.add_recommend_uid),
+
+    # 添加货币和包裹礼物
+    path('batch_page/', batch.batch_page),
+    path('batch/get_gift_list/', batch.get_gift_list),
+    path('batch/uid_add_gift/', batch.uid_add_gift),
 
     # 测试机HDID
     path('hdid/list/', hdid.hdid_list),
