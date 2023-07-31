@@ -1,14 +1,20 @@
-myresult = [(12, 14), (13, 16), (14, 17), (20004, 32), (20005, 33), (20006, 34), (20007, 35), (20008, 36), (20012, 120),
-            (20015, 181), (20020, 234), (20023, 241), (20025, 327), (20030, 359), (20031, 360), (20032, 361),
-            (20502, 1011414), (20503, 1011420), (20505, 1011550), (20506, 1011556), (21001, 407)]
-select = ["14", "16", "120", "181"]
-data = ['']
+import random
+ssid_data = [2798141443, 2798359950, 2798462340, 2804557409, 2798365345, 2798459643, 2798459646]
 
-if data[0]:
-    print("Asdasdasf")
-for i in myresult:
-    # print(i[1])
-    if str(i[1]) in select:
-        print(i)
-        data.append(i)
+room_data = [(1451119354, 2798141443), (1451119354, 2798359950), (1451119354, 2798462340),
+             (1451119354, 2804557409),
+             (1451119354, 2798365345)]
+data = []
+room_ssid_data = []
+
+for i in range(len(room_data)):
+    room_ssid_data.append(room_data[i][1])
+print(room_ssid_data)
+
+for x in range(len(ssid_data)):
+    if ssid_data[x] not in room_ssid_data:
+        print(ssid_data[x])
+        data.append(ssid_data[x])
 print(data)
+print(len(data))
+print(random.randint(0, len(data)-1))

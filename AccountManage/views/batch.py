@@ -1,5 +1,6 @@
-import mysql.connector
+import mysql.connector, requests, json
 
+from django.db import connection
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.http.response import JsonResponse
@@ -11,8 +12,10 @@ from AccountManage.utils.pthread import MyThread
 
 def batch_page(request):
     account_data = models.Account.objects.filter()
+    tester_data = models.TesterInfo.objects.filter()
     result_data = {
         "account_data": account_data,
+        "tester_data": tester_data
     }
     return render(request, 'batch_operation.html', result_data)
 
@@ -136,3 +139,43 @@ def uid_add_gift(request):
     mydb.close()
     result = {"status": True}
     return JsonResponse(result)
+
+
+@csrf_exempt
+def add_all_balance(request):
+    """ 批量加货币 """
+    account_belong_id = request.POST.get("account_belong_id")
+    all_qute = request.POST.get("allQute")
+    all_coin = request.POST.get("allCoin")
+    print(account_belong_id, all_qute, all_coin)
+    with connection.cursor() as cursor:
+        sql = "SELECT `accountmanage_account`.`account_uid` FROM `accountmanage_account` WHERE account_belong_id = '{}';".format(
+            account_belong_id)
+
+        # print(sql)
+        cursor.execute(sql)
+        sql_data = cursor.fetchall()  # 获取一条数据, 使用fetchone()
+        # print(sql_data)
+        uids = ""
+        for value in sql_data:
+            uids += value[0] + ","
+        print(uids)
+
+        url = "http://turnover-bg-test.yy.com/batchAddCurrency"
+        data = {
+            "uids": uids,
+            "amount": all_qute,
+            "description": "test",
+            "currencyType": 1,
+            "appid": 2,
+            "countryCode": "cn"
+        }
+        res = requests.get(url=url, params=data)
+        print(res.text)
+        print(res.status_code)
+        if res.status_code == 200:
+            result = {"status": True, "res": json.loads(res.text)}
+            return JsonResponse(result)
+
+        result = {"status": False, "res": res.text}
+        return JsonResponse(result)

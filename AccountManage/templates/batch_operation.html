@@ -135,6 +135,68 @@
 
 {% block content %}
     <div class="container" style="width: 1000px">
+
+
+        <!--批量给uid添加货币-->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">添加批量货币</h3>
+            </div>
+
+            <div class="panel-body">
+                <form method="post" novalidate="">
+
+                    <div class="form-group">
+                        <label>添批量添加谁的账号 : </label>
+                        <select name="accountBelongId" class="form-control" placeholder="添加包裹礼物的账号UID" required
+                                id="accountBelongId">
+                            <div class="modal-body">
+
+                                <form id="formAdd">
+                                    <div class="clearfix">
+
+                                        {% for field in tester_data %}
+                                            <div class="col-xs-6">
+                                                <div id="formGroup" class="form-group"
+                                                     style="position: relative;margin-bottom: 20px;">
+                                                    <option value="{{ field.id }}">  {{ field.tester_name }}</option>
+                                                    <span class="error-msg"
+                                                          style="color: red;position: absolute;"></span>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+
+                                    </div>
+                                </form>
+
+                            </div>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>充值额度 : </label>
+                        <input type="text" class="form-control" value="" placeholder="充值额度" required="" id="allQute">
+                    </div>
+                    <div class="form-group">
+                        <label>充值的币种 : </label>
+                        <select name="allCoin" class="form-control" required="" id="allCoin">
+                            {#                            <option value="1">Y币</option>#}
+                            {#                            <option value="2">紫水晶</option>#}
+                            {#                            <option value="34">金钻</option>#}
+                            {#                            <option value="36">红贝</option>#}
+                            {#                            <option value="58">ya币</option>#}
+                            <option value="2">紫水晶</option>
+                        </select>
+                    </div>
+
+                    <button type="button" id="btnAddAllBalance" class="btn btn-primary">确认</button>
+                    <h6 style="color: red" id="tips">确认后，属于自己的账号全部添加对应货币</h6>
+
+                </form>
+            </div>
+
+        </div>
+
+
         <!--一个uid添加不同礼物-->
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -144,27 +206,28 @@
                 <form method="post" novalidate="">
                     <div class="form-group">
                         <label>添加包裹礼物的账号UID : </label>
-                        <select name="addGiftUid" class="form-control" placeholder="添加包裹礼物的账号UID" required id="addGiftUid">
-                        <div class="modal-body">
+                        <select name="addGiftUid" class="form-control" placeholder="添加包裹礼物的账号UID" required
+                                id="addGiftUid">
+                            <div class="modal-body">
 
-                                    <form id="formAdd">
-                                        <div class="clearfix">
+                                <form id="formAdd">
+                                    <div class="clearfix">
 
-                                            {% for field in account_data %}
-                                                <div class="col-xs-6">
-                                                    <div id="formGroup" class="form-group"
-                                                         style="position: relative;margin-bottom: 20px;">
-                                                        <option value="{{ field.account_uid }}">  {{ field.account_card }}</option>
-                                                        <span class="error-msg"
-                                                              style="color: red;position: absolute;"></span>
-                                                    </div>
+                                        {% for field in account_data %}
+                                            <div class="col-xs-6">
+                                                <div id="formGroup" class="form-group"
+                                                     style="position: relative;margin-bottom: 20px;">
+                                                    <option value="{{ field.account_uid }}">  {{ field.account_card }}</option>
+                                                    <span class="error-msg"
+                                                          style="color: red;position: absolute;"></span>
                                                 </div>
-                                            {% endfor %}
+                                            </div>
+                                        {% endfor %}
 
-                                        </div>
-                                    </form>
+                                    </div>
+                                </form>
 
-                                </div>
+                            </div>
                         </select>
                     </div>
                     <div class="form-group">
@@ -209,6 +272,7 @@
             bindSearchGiftList();
             bindBtnUidAddGift();
             bindGetGiftList();
+            bindBtnAddAllBalance();
 
         });
 
@@ -282,5 +346,36 @@
                 });
             });
         }
+
+
+        function bindBtnAddAllBalance() {
+            $('#btnAddAllBalance').click(function () {
+
+                $("#tips").next().empty();
+
+                $.ajax({
+                    url: "/batch/add_all_balance/",
+                    dataType: "json",
+                    type: "post",
+                    data: {
+                        allQute: $("#allQute").val(),
+                        account_belong_id: $("#accountBelongId").val(),
+                        allCoin: $("#allCoin").val()
+                    },
+                    success: function (res) {
+                        console.log(res["res"]["msg"])
+                        if (res.status) {
+                            alert("添加成功");
+                            $("#tips").next().append(res["res"]["msg"])
+                        } else {
+                            alert(res["res"]["msg"])
+                        }
+
+                    }
+
+                });
+            });
+        }
+
     </script>
 {% endblock %}

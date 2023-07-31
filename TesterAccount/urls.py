@@ -57,7 +57,7 @@ urlpatterns = [
     path('operation/search_balance/', operation.search_balance),
     path('operation/reset_noble/', operation.reset_noble),
     path('operation/reset_sign_log/', operation.reset_sign_log),
-    path('operation/add_all_balance/', operation.add_all_balance),
+
     # path('operation/add_all_gift/', operation.add_all_gift),
     path('operation/uid_add_gift/', operation.uid_add_gift),
     path('operation/get_gift_list/', operation.get_gift_list),
@@ -74,6 +74,7 @@ urlpatterns = [
     path('batch_page/', batch.batch_page),
     path('batch/get_gift_list/', batch.get_gift_list),
     path('batch/uid_add_gift/', batch.uid_add_gift),
+    path('batch/add_all_balance/', batch.add_all_balance),
 
     # 测试机HDID
     path('hdid/list/', hdid.hdid_list),
