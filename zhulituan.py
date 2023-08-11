@@ -19,6 +19,7 @@ def get_hit_rule(user_data):
         "uid": user_data["uid"]
     }
     res = requests.get(url=url, params=data)
+    print(res.url)
     data = json.loads(res.text)["data"]
     match_obj = re.match(r'(.*)uidEnterFirst:(.*?)\\n.*', str(data), re.M | re.I)
     print(match_obj)
@@ -71,3 +72,4 @@ if __name__ == "__main__":
     room_data = get_hit_rule(data4)
     print(room_data)
     clear_cache(room_data)
+

@@ -76,12 +76,21 @@
 
                     <div class="form-group">
                         <label>需要推荐的业务 : </label>
-                        <select name="businessType" class="form-control" required="" id="id_businessType">
+                        <select name="businessType" class="form-control" onchange="bindCheckChoose()" required="" id="id_businessType">
                             <option value="1">交友房</option>
                             <option value="2">约战房</option>
                             <option value="3">宝贝房</option>
                             <option value="201">游戏房</option>
                             <option value="501">技能卡房</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="display: block" id="recommendPlace">
+                        <label>将sid推荐到哪个tab : </label>
+                        <select name="recommendVal" class="form-control" required="" id="recommendVal">
+                            <option value="11400">顶部推荐名单</option>
+                            <option value="10500">交友派对名单</option>
+                            <option value="10400">多人比拼名单</option>
                         </select>
                     </div>
 
@@ -139,6 +148,7 @@
     $(function () {
         bindBtnAddRecommendRoom();
         bindBtnAddRecommendUid();
+        bindCheckChoose();
     });
 
     function bindBtnAddRecommendUid() {
@@ -170,12 +180,25 @@
         });
     }
 
+    function bindCheckChoose() {
+        var businessType = $("#id_businessType").val()
+        var recommendPlace = document.getElementById("recommendPlace");
+        console.log(businessType);
+        if (businessType === "1") {
+            console.log(businessType);
+            recommendPlace.style.display = "block";
+        } else {
+            console.log(businessType);
+            recommendPlace.style.display = "none";
+        }
+    }
 
     function bindBtnAddRecommendRoom() {
         $("#btnAddRecommendRoom").click(function () {
 
-            sid = $('#id_sid').val();
-            ssid = $('#id_ssid').val();
+            var sid = $('#id_sid').val();
+            var ssid = $('#id_ssid').val();
+
 
             if (sid === "" || ssid === "") {
                 alert("sid或ssid不能为空");
@@ -188,6 +211,7 @@
                         sid: $('#id_sid').val(),
                         ssid: $('#id_ssid').val(),
                         businessType: $("#id_businessType").val(),
+                        recommendVal: $("#recommendVal").val()
                     },
                     success: function (res) {
                         if (res.status) {

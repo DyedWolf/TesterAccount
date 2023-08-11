@@ -22,23 +22,28 @@ a = "mongodb://125.94.237.198:19999/fts_zhuiya_recommend_v2"
 
 @csrf_exempt
 def add_recommend_room(request):
-    client = pymongo.MongoClient("mongodb://fts_mgo4_test2:de5HTRXfRXm0lncRA1eRKJE5@10.12.36.22:10011,10.26.130.24:10007,10.26.2.210:10007/fts_zhuiya_recommend_v2?replicaSet=ftsmgo4test21")
+    client = pymongo.MongoClient(
+        "mongodb://fts_mgo4_test2:de5HTRXfRXm0lncRA1eRKJE5@10.12.36.22:10011,10.26.130.24:10007,10.26.2.210:10007/fts_zhuiya_recommend_v2?replicaSet=ftsmgo4test21")
     mydb = client["fts_zhuiya_recommend_v2"]
     mycol = mydb["recommend_sid_picture_list"]
+    mycol1 = mydb["recommend_jy_list"]
 
     sid = int(request.POST.get("sid"))
     ssid = int(request.POST.get("ssid"))
     title = str(request.POST.get("title"))
     businessType = int(request.POST.get("businessType"))
+    recommendVal = int(request.POST.get("recommendVal"))
     addId = str(sid) + "_" + str(ssid) + "_" + str(businessType)
-
+    new_add_id = str(sid) + ":" + str(ssid) + ":" + str(recommendVal)
+    print("recommendVal:{}".format(recommendVal))
+    print("new_add_id:{}".format(new_add_id))
     if sid and ssid and businessType:
         results = mycol.find({"sid": sid, "ssid": ssid})
         exitData = []
         for result in results:
             # print(result)
             exitData.append(result["_id"])
-        print(exitData, addId, title)
+        print("添加sid的推荐-exitData:{}, addId:{}, title:{}".format(exitData, addId, title))
 
         if addId not in exitData:
             print("插入数据")
@@ -130,6 +135,20 @@ def add_recommend_room(request):
                 client.close()
                 return JsonResponse(response)
 
+        if businessType == 1:
+            new_data = {
+                "_id": new_add_id,
+                "mode": 1,
+                "recommend_end": 1691587400,
+                "recommend_start": 1690896200,
+                "sid": sid,
+                "ssid": ssid,
+                "weight": 10,
+                "zoneid": recommendVal
+            }
+            result = mycol1.update_one({"_id": "{}".format(new_add_id)}, {"$set": new_data}, upsert=True)
+            print(result.acknowledged)
+
     client.close()
     response = {"status": False, "error": "未知错误！"}
     return JsonResponse(response)
@@ -137,21 +156,24 @@ def add_recommend_room(request):
 
 @csrf_exempt
 def add_recommend_uid(request):
-    client = pymongo.MongoClient("mongodb://fts_mgo4_test2:de5HTRXfRXm0lncRA1eRKJE5@10.12.36.22:10011,10.26.130.24:10007,10.26.2.210:10007/fts_zhuiya_recommend_v2?replicaSet=ftsmgo4test21")
+    """ 添加uid的推荐 """
+    client = pymongo.MongoClient(
+        "mongodb://fts_mgo4_test2:de5HTRXfRXm0lncRA1eRKJE5@10.12.36.22:10011,10.26.130.24:10007,10.26.2.210:10007/fts_zhuiya_recommend_v2?replicaSet=ftsmgo4test21")
     mydb = client["fts_zhuiya_recommend_v2"]
     mycol = mydb["recommend_compere_picture_list"]
-
+    mycol1 = mydb["recommend_jy_list"]
     title = str(request.POST.get("title"))
     uid = int(request.POST.get("uid"))
     businessType = int(request.POST.get("businessType"))
     addId = str(uid) + "_" + str(businessType)
-
+    recommendVal = int(request.POST.get("recommendVal"))
+    new_add_id = str(uid) + ":" + str(recommendVal)
     results = mycol.find({"compereUID": uid})
     exitData = []
     for result in results:
         # print(result)
         exitData.append(result["_id"])
-    print(exitData, addId, title)
+    print("添加uid的推荐-exitData：{}, addId：{}, title：{}".format(exitData, addId, title))
 
     allData = {
         'businessType': businessType,
@@ -190,6 +212,19 @@ def add_recommend_uid(request):
     print(result.acknowledged)
     if result.acknowledged:
         response = {"status": True}
+        if businessType == 1:
+            new_data = {
+                "_id": "{}:{}".format(uid, recommendVal),
+                "mode": 2,
+                "recommend_end": 1721873850,
+                "recommend_start": 1690251450,
+                "uid": uid,
+                "weight": 10,
+                "zoneid": recommendVal
+            }
+            result = mycol1.update_one({"_id": "{}".format(new_add_id)}, {"$set": new_data}, upsert=True)
+            print(result.acknowledged)
+            print(new_data)
         client.close()
         return JsonResponse(response)
 

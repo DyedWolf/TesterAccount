@@ -38,12 +38,22 @@
 
                     <div class="form-group">
                         <label>需要推荐的业务 : </label>
-                        <select name="businessType" class="form-control" required="" id="id_businessType">
+                        <select name="businessTypeSid" class="form-control" onchange="bindCheckChooseSid()" required=""
+                                id="id_businessTypeSid">
                             <option value="1">交友房</option>
                             <option value="2">约战房</option>
                             <option value="3">宝贝房</option>
                             <option value="201">游戏房</option>
                             <option value="501">技能卡房</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="display: block" id="recommendPlaceSid">
+                        <label>将SID推荐到哪个tab : </label>
+                        <select name="recommendVal" class="form-control" required="" id="recommendValSid">
+                            <option value="11400">顶部推荐名单</option>
+                            <option value="10500">交友派对名单</option>
+                            <option value="10400">多人比拼名单</option>
                         </select>
                     </div>
 
@@ -76,12 +86,21 @@
                     </div>
                     <div class="form-group">
                         <label>需要推荐的业务 : </label>
-                        <select name="businessType" class="form-control" required="" id="id_businessType">
+                        <select name="businessTypeUid" class="form-control" required="" onchange="bindCheckChooseUid()"
+                                id="id_businessTypeUid">
                             <option value="1">交友房</option>
                             <option value="2">约战房</option>
                             <option value="3">宝贝房</option>
                             <option value="201">游戏房</option>
                             <option value="501">技能卡房</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="display: block" id="recommendPlaceUid">
+                        <label>将UID推荐到哪个tab : </label>
+                        <select name="recommendVal" class="form-control" required="" id="recommendValUid">
+                            <option value="11400">顶部推荐名单</option>
+                            <option value="4011400">超级主持名单</option>
                         </select>
                     </div>
 
@@ -102,7 +121,33 @@
         $(function () {
             bindBtnAddRecommendRoom();
             bindBtnAddRecommendUid();
+            bindCheckChooseSid();
+            bindCheckChooseUid();
         });
+
+        function bindCheckChooseSid() {
+            var businessTypeSid = $("#id_businessTypeSid").val()
+            var recommendPlaceSid = document.getElementById("recommendPlaceSid");
+
+            if (businessTypeSid === "1") {
+                console.log(businessTypeSid);
+                recommendPlaceSid.style.display = "block";
+            } else {
+                recommendPlaceSid.style.display = "none";
+            }
+        }
+
+        function bindCheckChooseUid() {
+            var businessTypeUid = $("#id_businessTypeUid").val()
+            var recommendPlaceUid = document.getElementById("recommendPlaceUid");
+
+            if (businessTypeUid === "1") {
+                console.log(businessTypeUid);
+                recommendPlaceUid.style.display = "block";
+            } else {
+                recommendPlaceUid.style.display = "none";
+            }
+        }
 
         function bindBtnAddRecommendUid() {
             $("#btnAddRecommendUid").click(function () {
@@ -119,7 +164,8 @@
                         data: {
                             title: $('#id_uid_title').val(),
                             uid: $('#id_uid').val(),
-                            businessType: $("#id_businessType").val(),
+                            businessType: $("#id_businessTypeUid").val(),
+                            recommendVal: $("#recommendValUid").val()
                         },
                         success: function (res) {
                             if (res.status) {
@@ -152,7 +198,8 @@
                             title: $('#id_sid_title').val(),
                             sid: $('#id_sid').val(),
                             ssid: $('#id_ssid').val(),
-                            businessType: $("#id_businessType").val(),
+                            businessType: $("#id_businessTypeSid").val(),
+                            recommendVal: $("#recommendValSid").val()
                         },
                         success: function (res) {
                             if (res.status) {
