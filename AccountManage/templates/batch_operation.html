@@ -232,7 +232,8 @@
                     </div>
                     <div class="form-group">
                         <label>需要添加什么业务的包裹礼物 : </label>
-                        <select name="idBusiness" class="form-control" required="" id="idBusiness">
+                        <select name="idBusiness" class="form-control" onchange="bindGetGiftList()" required=""
+                                id="idBusiness">
                             <option value="2">交友房</option>
                             <option value="34">语音房</option>
                             <option value="36">宝贝房</option>
@@ -269,7 +270,7 @@
     <script type="text/javascript">
         $(function () {
 
-            bindSearchGiftList();
+            // bindSearchGiftList();
             bindBtnUidAddGift();
             bindGetGiftList();
             bindBtnAddAllBalance();
@@ -292,6 +293,10 @@
 
 
         function bindGetGiftList() {
+            $("#giftList").empty();
+            var loading = document.getElementById("devLoading");
+            loading.style.display = "block";
+
             $.ajax({
                 url: '/batch/get_gift_list/',
                 dataType: 'json',

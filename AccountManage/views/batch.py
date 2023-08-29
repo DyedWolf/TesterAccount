@@ -127,11 +127,11 @@ def uid_add_gift(request):
                 final_gift_list.append(num)
 
         # 定义为 run() 方法传入的参数
-        data = {"data": final_gift_list, "uid": uid, "nums": nums}
-        print("data:{}".format(data))
+        data = {"data": final_gift_list, "uid": uid, "nums": nums, "business": status[0]}
+        print("部分礼物data:{}".format(data))
     else:
-        data = {"给uid添加包裹礼物的data": myresult, "uid": uid, "nums": nums}
-        print(data)
+        data = {"data": myresult, "uid": uid, "nums": nums, "business": status[0]}
+        print("全部礼物data:{}".format(data))
     # 创建子线程
     my_thread = MyThread()
     my_thread.use_threading(data)

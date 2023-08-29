@@ -1,19 +1,7 @@
-class Solution:
-    def mySqrt(self, x: int) -> int:
-        l, r, ans = 0, x, -1
-        print(l, r, ans)
-        while l <= r:
-            mid = (l + r) // 2
-            if mid * mid <= x:
-                ans = mid
-                l = mid + 1
-                print(l, r, ans)
-            else:
-                r = mid - 1
-                print(l, r, ans)
-        return ans
+import requests, json
 
-
-if __name__ == "__main__":
-    x = Solution()
-    print(x.mySqrt(9))
+url = "https://yomi1-test.yy.com/zhuiya_recommend/v2/get_recommend_info?id={}&next=0".format(11400)
+headers = {"x-fts-platform": "4"}
+response = requests.get(url=url, headers=headers)
+data = json.loads(response.content)["list"]
+print(data)

@@ -85,6 +85,22 @@ def add_recommend_room(request):
                     "contentLabel": ""}
             result = mycol.insert_one(data)
             print(result.acknowledged)
+
+        if businessType == 1:
+            new_data = {
+                "_id": new_add_id,
+                "mode": 1,
+                "recommend_end": 1691587400,
+                "recommend_start": 1690896200,
+                "sid": sid,
+                "ssid": ssid,
+                "weight": 10,
+                "zoneid": recommendVal
+            }
+            result = mycol1.insert_one(new_data)
+            print("新推荐数据：{}".format(new_data))
+            print(result.acknowledged)
+
             if result.acknowledged:
                 response = {"status": True}
                 client.close()
@@ -147,6 +163,7 @@ def add_recommend_room(request):
                 "zoneid": recommendVal
             }
             result = mycol1.update_one({"_id": "{}".format(new_add_id)}, {"$set": new_data}, upsert=True)
+            print("新推荐数据：{}".format(new_data))
             print(result.acknowledged)
 
     client.close()
